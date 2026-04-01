@@ -43,6 +43,16 @@ Each level introduces a core infrastructure concept:
 | 9 | The Elastic Cloud | Auto-scaling |
 | 10 | Chaos Engineering | Fault injection & circuit breakers |
 
+**Real-World Scenarios:**
+
+| Level | Name | Based On |
+|:-----:|------|----------|
+| 11 | Build Twitter's Feed | Fan-out, timeline caching |
+| 12 | Scale Uber's Matching | Real-time geo matching, queues |
+| 13 | Design Netflix Streaming | Global CDN, edge computing |
+| 14 | WhatsApp Message Delivery | Guaranteed delivery, async |
+| 15 | Stripe's Payment Pipeline | Exactly-once processing, failover |
+
 ---
 
 ## Getting Started
