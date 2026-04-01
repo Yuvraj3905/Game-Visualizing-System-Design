@@ -51,7 +51,7 @@ export default function HUD() {
     }}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <h1 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-          Antigravity <span style={{ color: 'var(--text-accent)' }}>Sim</span>
+          System Design <span style={{ color: 'var(--text-accent)' }}>Sim</span>
         </h1>
         <p style={{ margin: 0, fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 600 }}>
           Level {level} — {config.name}

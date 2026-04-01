@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="public/favicon.svg" width="80" alt="Antigravity Sim Logo" />
+  <img src="public/favicon.svg" width="80" alt="System Design Sim Logo" />
 </p>
 
-<h1 align="center">Antigravity Sim</h1>
+<h1 align="center">System Design Sim</h1>
 
 <p align="center">
   <strong>Learn System Design by Building Infrastructure</strong>
@@ -26,7 +26,7 @@
 
 ## What Is This?
 
-Antigravity Sim is an interactive, visual system design simulator. Instead of reading about load balancers and caches in a textbook, you **build** them — drag components onto a canvas, wire them together, and see if your architecture survives under real traffic.
+System Design Sim is an interactive, visual system design simulator. Instead of reading about load balancers and caches in a textbook, you **build** them — drag components onto a canvas, wire them together, and see if your architecture survives under real traffic.
 
 Each level introduces a core infrastructure concept:
 

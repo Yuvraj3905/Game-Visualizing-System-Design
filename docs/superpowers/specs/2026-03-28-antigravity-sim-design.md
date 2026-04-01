@@ -1,4 +1,4 @@
-# Antigravity Sim — System Architect's Journey
+# System Design Sim — System Architect's Journey
 
 A browser-based simulation game that teaches system design through 5 progressive levels. Players start with a single server and scale up to a fault-tolerant, globally distributed architecture. Open-source educational tool.
 

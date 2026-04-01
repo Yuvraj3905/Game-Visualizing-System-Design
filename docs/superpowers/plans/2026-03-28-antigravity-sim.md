@@ -1,4 +1,4 @@
-# Antigravity Sim Implementation Plan
+# System Design Sim Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -8,7 +8,7 @@
 
 **Tech Stack:** React 19, Vite 8, React Flow 11, Zustand 5, Lucide React, CSS custom properties + keyframe animations. No new dependencies.
 
-**Spec:** `docs/superpowers/specs/2026-03-28-antigravity-sim-design.md`
+**Spec:** `docs/superpowers/specs/2026-03-28-antigravity-sim-design.md` (file kept for history)
 
 ---
 
@@ -2307,7 +2307,7 @@ export default function HUD() {
       {/* Left: Title + Level */}
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <h1 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-          Antigravity <span style={{ color: 'var(--text-accent)' }}>Sim</span>
+          System Design <span style={{ color: 'var(--text-accent)' }}>Sim</span>
         </h1>
         <p style={{ margin: 0, fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 600 }}>
           Level {level} — {config.name}

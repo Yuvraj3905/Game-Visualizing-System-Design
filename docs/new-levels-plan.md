@@ -1,4 +1,4 @@
-# New Levels Plan — Antigravity Sim (Levels 6–10)
+# New Levels Plan — System Design Sim (Levels 6–10)
 
 Each level introduces one core infrastructure concept, builds on the previous, and fits the existing engine architecture (simulators, topology walker, level configs).
 

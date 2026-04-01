@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-"Antigravity Sim" — a browser-based game where players design and scale server infrastructure. Players manage a budget, add servers, spike traffic, and observe how capacity and latency respond. Built as a React + Vite SPA using React Flow for the visual node-based canvas.
+"System Design Sim" — a browser-based game where players design and scale server infrastructure. Players manage a budget, add servers, spike traffic, and observe how capacity and latency respond. Built as a React + Vite SPA using React Flow for the visual node-based canvas.
 
 ## Commands
 

@@ -76,7 +76,7 @@ export default function GuidedTour() {
 
   // Auto-trigger on first play
   useEffect(() => {
-    if (gameStatus === 'playing' && !localStorage.getItem('antigravity-tour-completed')) {
+    if (gameStatus === 'playing' && !localStorage.getItem('sdsim-tour-completed')) {
       // Small delay so DOM elements are rendered
       const timer = setTimeout(() => setShowTour(true), 600);
       return () => clearTimeout(timer);
@@ -104,7 +104,7 @@ export default function GuidedTour() {
   const finish = () => {
     setShowTour(false);
     setStep(0);
-    localStorage.setItem('antigravity-tour-completed', 'true');
+    localStorage.setItem('sdsim-tour-completed', 'true');
   };
 
   const next = () => {
