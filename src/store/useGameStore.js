@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { LEVEL_CONFIGS, TOTAL_LEVELS } from '../engine/LevelConfigs.js';
 import { runTick } from '../engine/LevelOrchestrator.js';
+import * as Sound from '../audio/SoundEngine.js';
 
 // Restore saved progress from localStorage
 function loadProgress() {
@@ -32,6 +33,7 @@ const useGameStore = create((set, get) => ({
   showLevelSelect: false,
   showTour: false,
   budgetShake: false,
+  audioMuted: false,
 
   // Game state
   money: LEVEL_CONFIGS[1].budget,
@@ -77,6 +79,7 @@ const useGameStore = create((set, get) => ({
     const { tickInterval } = get();
     if (tickInterval) clearInterval(tickInterval);
 
+    Sound.stopMusic();
     saveProgress(levelNum, get().unlockedLevel);
     set({
       level: levelNum,
@@ -154,6 +157,7 @@ const useGameStore = create((set, get) => ({
     if (money < cost) {
       set({ budgetShake: true });
       setTimeout(() => set({ budgetShake: false }), 500);
+      Sound.playFail();
       return false;
     }
 
@@ -196,6 +200,7 @@ const useGameStore = create((set, get) => ({
       money: money - cost,
       nodes: [...nodes, newNode],
     });
+    Sound.playClick();
     return true;
   },
 
@@ -227,6 +232,8 @@ const useGameStore = create((set, get) => ({
       gameStatus: 'won',
       unlockedLevel: finalUnlocked,
     });
+    Sound.stopMusic();
+    Sound.playSuccess();
   },
 
   onFail: () => {
@@ -237,6 +244,8 @@ const useGameStore = create((set, get) => ({
       tickInterval: null,
       gameStatus: 'failed',
     });
+    Sound.stopMusic();
+    Sound.playFail();
   },
 
   retryLevel: () => {
@@ -262,6 +271,7 @@ const useGameStore = create((set, get) => ({
       nodes: nodes.filter(n => n.id !== nodeId),
       edges: edges.filter(e => e.source !== nodeId && e.target !== nodeId),
     });
+    Sound.playSell();
     return true;
   },
 
@@ -279,6 +289,13 @@ const useGameStore = create((set, get) => ({
   dismissIntro: () => {
     set({ gameStatus: 'playing' });
     get().startSimulation();
+    Sound.startMusic();
+  },
+
+  toggleAudioMute: () => {
+    const muted = Sound.toggleMute();
+    set({ audioMuted: muted });
+    if (!muted && get().gameStatus === 'playing') Sound.startMusic();
   },
 }));
 

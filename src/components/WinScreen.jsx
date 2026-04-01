@@ -1,4 +1,4 @@
-import { Trophy, ArrowRight, RotateCcw } from 'lucide-react';
+import { Trophy, ArrowRight, RotateCcw, ExternalLink } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS, TOTAL_LEVELS } from '../engine/LevelConfigs';
 
@@ -77,6 +77,30 @@ export default function WinScreen() {
           <p style={{ margin: 0, fontSize: 14, lineHeight: 1.7, color: 'var(--text-secondary)' }}>
             {config.winLesson}
           </p>
+          {config.references && config.references.length > 0 && (
+            <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.08em' }}>
+                Deep Dive
+              </div>
+              {config.references.map((ref, i) => (
+                <a
+                  key={i}
+                  href={ref.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    fontSize: 12, color: 'var(--text-accent)', textDecoration: 'none',
+                    display: 'flex', alignItems: 'center', gap: 6,
+                    transition: 'opacity 150ms',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.opacity = '0.7'}
+                  onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                >
+                  <ExternalLink size={12} /> {ref.title}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>

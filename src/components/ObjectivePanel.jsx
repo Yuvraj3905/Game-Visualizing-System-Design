@@ -5,7 +5,7 @@ import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
 import { LEVEL_OBJECTIVES } from '../engine/ObjectiveChecklist';
 
 export default function ObjectivePanel() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const { level, gameStatus, metrics, rps } = useGameStore();
 
   if (gameStatus !== 'playing') return null;
@@ -13,6 +13,7 @@ export default function ObjectivePanel() {
   const config = LEVEL_CONFIGS[level];
   const objectives = LEVEL_OBJECTIVES[level] || [];
   const enrichedMetrics = { ...metrics, rps };
+  const completedCount = objectives.filter(o => o.check(enrichedMetrics)).length;
 
   return (
     <div
@@ -31,9 +32,9 @@ export default function ObjectivePanel() {
         boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
       }}
     >
-      {/* Header */}
+      {/* Header — always visible */}
       <div
-        onClick={() => setCollapsed(c => !c)}
+        onClick={() => setExpanded(e => !e)}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -48,28 +49,30 @@ export default function ObjectivePanel() {
         <span style={{ flex: 1, fontSize: 12, fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.1em' }}>
           Objective
         </span>
-        {collapsed ? <ChevronUp size={14} style={{ color: 'var(--text-muted)' }} /> : <ChevronDown size={14} style={{ color: 'var(--text-muted)' }} />}
+        <span style={{ fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: completedCount === objectives.length ? 'var(--color-healthy)' : 'var(--text-accent)' }}>
+          {completedCount}/{objectives.length}
+        </span>
+        {expanded ? <ChevronDown size={14} style={{ color: 'var(--text-muted)' }} /> : <ChevronUp size={14} style={{ color: 'var(--text-muted)' }} />}
       </div>
 
-      {/* Body */}
+      {/* Compact objective line — always shown */}
+      <div style={{ padding: '10px 16px', borderBottom: expanded ? '1px solid var(--border-primary)' : 'none' }}>
+        <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.4 }}>
+          {config.narrative.objective}
+        </p>
+      </div>
+
+      {/* Expandable checklist + hint */}
       <div style={{
-        maxHeight: collapsed ? 0 : 300,
+        maxHeight: expanded ? 300 : 0,
         overflow: 'hidden',
         transition: 'max-height 300ms ease',
       }}>
-        <div style={{ padding: 16 }}>
-          {/* Objective text */}
-          <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.5 }}>
-            {config.narrative.objective}
-          </p>
-
+        <div style={{ padding: '12px 16px' }}>
           {/* Hint */}
-          <p style={{ margin: '8px 0 0', fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.4, fontStyle: 'italic' }}>
+          <p style={{ margin: '0 0 12px', fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.4, fontStyle: 'italic' }}>
             {config.narrative.hint}
           </p>
-
-          {/* Divider */}
-          <div style={{ height: 1, background: 'var(--border-primary)', margin: '12px 0' }} />
 
           {/* Checklist */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

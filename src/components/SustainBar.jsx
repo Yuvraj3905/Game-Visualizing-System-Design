@@ -1,8 +1,18 @@
+import { useEffect, useRef } from 'react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
+import { playTick } from '../audio/SoundEngine';
 
 export default function SustainBar() {
   const { sustainedTicks, level, gameStatus } = useGameStore();
+  const prevTicks = useRef(0);
+
+  useEffect(() => {
+    if (sustainedTicks > prevTicks.current && sustainedTicks > 0) {
+      playTick();
+    }
+    prevTicks.current = sustainedTicks;
+  }, [sustainedTicks]);
   const config = LEVEL_CONFIGS[level];
 
   if (gameStatus !== 'playing') return null;

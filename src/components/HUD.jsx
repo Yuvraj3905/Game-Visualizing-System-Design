@@ -1,7 +1,8 @@
-import { DollarSign, Activity, Clock, Heart, Users, RotateCcw, List, HelpCircle } from 'lucide-react';
+import { DollarSign, Activity, Clock, Heart, Users, RotateCcw, List, HelpCircle, Volume2, VolumeX } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
 import Tooltip from './Tooltip';
+import * as Sound from '../audio/SoundEngine';
 
 function StatCard({ icon, label, value, unit, color, animate, tooltip }) {
   const Icon = icon;
@@ -31,7 +32,7 @@ function StatCard({ icon, label, value, unit, color, animate, tooltip }) {
 }
 
 export default function HUD() {
-  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake } = useGameStore();
+  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute } = useGameStore();
   const config = LEVEL_CONFIGS[level];
 
   const latencyColor = latency > 200 ? 'var(--color-critical)' : latency > 100 ? 'var(--color-warning)' : 'var(--color-healthy)';
@@ -94,7 +95,7 @@ export default function HUD() {
           <Tooltip text="Manually spike traffic by 25% to stress-test your system" position="bottom">
             <button
               data-tour="spike-traffic"
-              onClick={() => setTargetTraffic(Math.min(targetRps + Math.round(config.targetTraffic / 4), config.targetTraffic))}
+              onClick={() => { setTargetTraffic(Math.min(targetRps + Math.round(config.targetTraffic / 4), config.targetTraffic)); Sound.playSpikeTraffic(); }}
               style={{
                 padding: '8px 16px', background: 'var(--bg-primary)', color: 'var(--text-primary)',
                 border: '1px solid var(--border-primary)', borderRadius: 10, fontWeight: 700, fontSize: 13,
@@ -140,6 +141,21 @@ export default function HUD() {
             }}
           >
             <HelpCircle size={16} />
+          </button>
+        </Tooltip>
+        <Tooltip text={audioMuted ? 'Unmute sounds' : 'Mute sounds'} position="bottom">
+          <button
+            onClick={toggleAudioMute}
+            style={{
+              width: 36, height: 36, borderRadius: '50%',
+              background: audioMuted ? 'var(--color-critical-bg)' : 'var(--bg-tertiary)',
+              border: `1px solid ${audioMuted ? 'var(--color-critical)' : 'var(--border-primary)'}`,
+              color: audioMuted ? 'var(--color-critical)' : 'var(--text-muted)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', flexShrink: 0,
+            }}
+          >
+            {audioMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
           </button>
         </Tooltip>
       </div>

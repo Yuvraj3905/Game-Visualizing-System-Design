@@ -38,6 +38,7 @@ import AnimatedEdge from './components/AnimatedEdge';
 import ObjectivePanel from './components/ObjectivePanel';
 import GuidedTour from './components/GuidedTour';
 import DevPanel from './components/DevPanel';
+import * as Sound from './audio/SoundEngine';
 
 const isDevMode = new URLSearchParams(window.location.search).get('dev') === 'true';
 
@@ -87,6 +88,18 @@ export default function App() {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const reactFlowWrapper = useRef(null);
   const initialized = useRef(false);
+  const lastOverloaded = useRef(0);
+  const overloadCooldown = useRef(0);
+
+  // Overload sound effect
+  const metrics = useGameStore(s => s.metrics);
+  useEffect(() => {
+    if (metrics.overloadedServers > 0 && lastOverloaded.current === 0 && Date.now() - overloadCooldown.current > 3000) {
+      Sound.playOverload();
+      overloadCooldown.current = Date.now();
+    }
+    lastOverloaded.current = metrics.overloadedServers;
+  }, [metrics.overloadedServers]);
 
   useEffect(() => {
     if (!initialized.current) {
@@ -143,6 +156,7 @@ export default function App() {
     if (removals.length > 0) {
       const removedIds = new Set(removals.map(c => c.id));
       storeSetEdges(eds => eds.filter(e => !removedIds.has(e.id)));
+      Sound.playDeleteEdge();
     }
   }, [onEdgesChange, storeSetEdges]);
 
@@ -150,6 +164,7 @@ export default function App() {
     const newEdge = { ...params, id: `e-${params.source}-${params.target}`, animated: true };
     setEdges(eds => addEdge(newEdge, eds));
     storeSetEdges(eds => [...eds, newEdge]);
+    Sound.playConnect();
   }, [setEdges, storeSetEdges]);
 
   const onDragOver = useCallback((event) => {
