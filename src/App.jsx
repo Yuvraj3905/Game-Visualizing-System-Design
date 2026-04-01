@@ -32,6 +32,9 @@ import SustainBar from './components/SustainBar';
 import AnimatedEdge from './components/AnimatedEdge';
 import ObjectivePanel from './components/ObjectivePanel';
 import GuidedTour from './components/GuidedTour';
+import DevPanel from './components/DevPanel';
+
+const isDevMode = new URLSearchParams(window.location.search).get('dev') === 'true';
 
 // HOC to wrap deletable nodes — defined at module scope for referential stability
 const withDeletable = (Component) => {
@@ -208,6 +211,7 @@ export default function App() {
       <FailScreen />
       <LevelSelect />
       <GuidedTour />
+      {isDevMode && <DevPanel />}
     </div>
   );
 }

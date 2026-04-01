@@ -109,6 +109,10 @@ const useGameStore = create((set, get) => ({
     set({ targetRps: target });
   },
 
+  setMoney: (amount) => {
+    set({ money: amount });
+  },
+
   addNode: (type, position) => {
     const { money, nodes, level } = get();
     const config = LEVEL_CONFIGS[level];
