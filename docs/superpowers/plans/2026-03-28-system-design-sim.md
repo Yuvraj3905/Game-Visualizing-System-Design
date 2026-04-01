@@ -8,7 +8,7 @@
 
 **Tech Stack:** React 19, Vite 8, React Flow 11, Zustand 5, Lucide React, CSS custom properties + keyframe animations. No new dependencies.
 
-**Spec:** `docs/superpowers/specs/2026-03-28-antigravity-sim-design.md` (file kept for history)
+**Spec:** `docs/superpowers/specs/2026-03-28-system-design-sim-design.md`
 
 ---
 
