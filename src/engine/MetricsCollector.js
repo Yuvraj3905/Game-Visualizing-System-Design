@@ -9,9 +9,16 @@ export function collectMetrics(state) {
     survivedDisaster = false,
     baseLatency = 50,
     congestionFactor = 0.1,
+    queueLatencyPenalty = 0,
+    chaosLatencyPenalty = 0,
+    meshLatencyPenalty = 0,
+    rateLimiterState = {},
+    queueState = {},
+    autoScalerState = {},
+    chaosState = {},
   } = state;
 
-  const servers = nodes.filter(n => n.type === 'server' && n.data.status !== 'dead');
+  const servers = nodes.filter(n => (n.type === 'server' || n.type === 'worker') && n.data.status !== 'dead');
   const totalCapacity = servers.reduce((sum, s) => sum + (s.data.capacity || 0), 0);
 
   const overloadedServers = servers.filter(
@@ -43,7 +50,14 @@ export function collectMetrics(state) {
 
   const avgLatency = Math.round(
     serverLatency + cacheLatencyFactor + (geoLatencyPenalty > 0 ? geoLatencyPenalty : 0)
+    + queueLatencyPenalty + chaosLatencyPenalty + meshLatencyPenalty
   );
+
+  // New metrics for levels 6-10
+  const totalBlocked = Object.values(rateLimiterState).reduce((sum, r) => sum + (r.blocked || 0), 0);
+  const maxQueueDepth = Object.values(queueState).reduce((max, q) => Math.max(max, q.depth || 0), 0);
+  const activeChaoEvent = chaosState?.activeEvent || null;
+  const totalInstances = Object.values(autoScalerState).reduce((sum, a) => sum + (a.instanceCount || 0), 0);
 
   const bouncedUsers = regionValues.reduce((sum, r) => sum + (r.bounced || 0), 0);
 
@@ -73,5 +87,9 @@ export function collectMetrics(state) {
     healthPercent,
     systemDown,
     survivedDisaster,
+    totalBlocked,
+    maxQueueDepth,
+    activeChaoEvent,
+    totalInstances,
   };
 }

@@ -1,4 +1,4 @@
-import { Server, Database, Split, Zap, Globe, MapPin, DatabaseZap, HeartPulse, Lock } from 'lucide-react';
+import { Server, Database, Split, Zap, Globe, MapPin, DatabaseZap, HeartPulse, Lock, Shield, Layers, Cog, TrendingUp, ShieldOff } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
 import Tooltip from './Tooltip';
@@ -12,6 +12,11 @@ const COMPONENT_DEFS = {
   region: { label: 'Region', icon: MapPin, color: 'var(--node-region)' },
   replica: { label: 'Replica', icon: DatabaseZap, color: 'var(--node-replica)' },
   healthCheck: { label: 'Health Check', icon: HeartPulse, color: 'var(--node-healthcheck)' },
+  apiGateway: { label: 'API Gateway', icon: Shield, color: 'var(--node-apigateway)' },
+  messageQueue: { label: 'Message Queue', icon: Layers, color: 'var(--node-messagequeue)' },
+  worker: { label: 'Worker', icon: Cog, color: 'var(--node-worker)' },
+  autoScaler: { label: 'Auto-Scaler', icon: TrendingUp, color: 'var(--node-autoscaler)' },
+  circuitBreaker: { label: 'Circuit Breaker', icon: ShieldOff, color: 'var(--node-circuitbreaker)' },
 };
 
 const COMPONENT_TOOLTIPS = {
@@ -23,9 +28,14 @@ const COMPONENT_TOOLTIPS = {
   region: 'Deploy infrastructure in a specific geographic region to reduce user latency.',
   replica: 'A read-only copy of your database. Enables failover if the primary DB dies.',
   healthCheck: 'Monitors nodes for failures and triggers automatic failover to replicas.',
+  apiGateway: 'Filters and rate-limits incoming traffic. Blocks bots and abusive requests before they hit servers.',
+  messageQueue: 'Buffers requests between producers and consumers. Decouples fast servers from slow background work.',
+  worker: 'Processes jobs from a message queue asynchronously. Scale workers to increase throughput.',
+  autoScaler: 'Monitors server load and automatically adds or removes capacity to match demand.',
+  circuitBreaker: 'Prevents cascading failures by isolating broken services. Opens circuit when failures exceed threshold.',
 };
 
-const ALL_COMPONENTS = ['server', 'database', 'loadBalancer', 'cache', 'cdn', 'region', 'replica', 'healthCheck'];
+const ALL_COMPONENTS = ['server', 'database', 'loadBalancer', 'cache', 'cdn', 'region', 'replica', 'healthCheck', 'apiGateway', 'messageQueue', 'worker', 'autoScaler', 'circuitBreaker'];
 
 export default function ComponentTray() {
   const { level, money, addNode, gameStatus } = useGameStore();

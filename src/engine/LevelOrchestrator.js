@@ -4,6 +4,11 @@ import { simulateLoadBalancing } from './simulators/LoadBalancerSimulator.js';
 import { simulateCache } from './simulators/CacheSimulator.js';
 import { simulateGeoLatency } from './simulators/GeoLatencySimulator.js';
 import { simulateFailover } from './simulators/FailoverSimulator.js';
+import { simulateRateLimiter } from './simulators/RateLimiterSimulator.js';
+import { simulateQueue } from './simulators/QueueSimulator.js';
+import { simulateAutoScaler } from './simulators/AutoScalerSimulator.js';
+import { simulateChaos } from './simulators/ChaosSimulator.js';
+import { simulateServiceMesh } from './simulators/ServiceMeshSimulator.js';
 import { collectMetrics } from './MetricsCollector.js';
 import { LEVEL_CONFIGS } from './LevelConfigs.js';
 
@@ -13,6 +18,11 @@ const SIMULATOR_MAP = {
   cache: simulateCache,
   geoLatency: simulateGeoLatency,
   failover: simulateFailover,
+  rateLimiter: simulateRateLimiter,
+  queue: simulateQueue,
+  autoScaler: simulateAutoScaler,
+  chaos: simulateChaos,
+  serviceMesh: simulateServiceMesh,
 };
 
 export function runTick(gameState) {
@@ -49,6 +59,10 @@ export function runTick(gameState) {
     nodeTraffic: topology.nodeTraffic,
     cacheState,
     failoverState,
+    queueState: gameState.queueState || {},
+    rateLimiterState: gameState.rateLimiterState || {},
+    autoScalerState: gameState.autoScalerState || {},
+    chaosState: gameState.chaosState || {},
     tickCount: tickCount + 1,
     disasterTime: config.disasterTime,
     trafficPerSource: {},
@@ -72,13 +86,13 @@ export function runTick(gameState) {
   // 6. Update node data with traffic info
   const updatedNodes = (simState.nodes || nodes).map(node => {
     const traffic = simState.nodeTraffic[node.id] || 0;
-    const isServer = node.type === 'server';
-    const isOverloaded = isServer && traffic > node.data.capacity;
+    const hasCapacity = node.type === 'server' || node.type === 'worker' || node.type === 'replica';
+    const isOverloaded = hasCapacity && traffic > node.data.capacity;
 
     let status = node.data.status;
     if (status !== 'dead') {
       if (isOverloaded) status = 'critical';
-      else if (isServer && traffic > node.data.capacity * 0.7) status = 'warning';
+      else if (hasCapacity && traffic > node.data.capacity * 0.7) status = 'warning';
       else status = 'healthy';
     }
 
@@ -87,9 +101,36 @@ export function runTick(gameState) {
       hitRate = simState.cacheState[node.id].hitRate;
     }
 
+    // Update queue depth
+    let depth = node.data.depth;
+    if (node.type === 'messageQueue' && simState.queueState?.[node.id]) {
+      depth = simState.queueState[node.id].depth;
+    }
+
+    // Update rate limiter blocked count
+    let blocked = node.data.blocked;
+    if (node.type === 'apiGateway' && simState.rateLimiterState?.[node.id]) {
+      blocked = simState.rateLimiterState[node.id].blocked;
+    }
+
+    // Update auto-scaler instance count
+    let instanceCount = node.data.instanceCount;
+    if (node.type === 'autoScaler' && simState.autoScalerState?.[node.id]) {
+      instanceCount = simState.autoScalerState[node.id].instanceCount;
+    }
+
+    // Update circuit breaker state
+    let cbState = node.data.cbState;
+    let failures = node.data.failures;
+    if (node.type === 'circuitBreaker' && simState.chaosState?.circuitBreakerStates?.[node.id]) {
+      const cbs = simState.chaosState.circuitBreakerStates[node.id];
+      cbState = cbs.state;
+      failures = cbs.failures;
+    }
+
     return {
       ...node,
-      data: { ...node.data, rps: Math.round(traffic), status, hitRate },
+      data: { ...node.data, rps: Math.round(traffic), status, hitRate, depth, blocked, instanceCount, cbState, failures },
     };
   });
 
@@ -125,6 +166,10 @@ export function runTick(gameState) {
     tickCount: newTickCount,
     cacheState: simState.cacheState || cacheState,
     failoverState: simState.failoverState || failoverState,
+    queueState: simState.queueState || gameState.queueState,
+    rateLimiterState: simState.rateLimiterState || gameState.rateLimiterState,
+    autoScalerState: simState.autoScalerState || gameState.autoScalerState,
+    chaosState: simState.chaosState || gameState.chaosState,
     metrics,
     gameStatus,
     sustainedTicks: newSustainedTicks,

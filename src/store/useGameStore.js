@@ -24,6 +24,10 @@ const useGameStore = create((set, get) => ({
   sustainedTicks: 0,
   cacheState: {},
   failoverState: {},
+  queueState: {},
+  rateLimiterState: {},
+  autoScalerState: {},
+  chaosState: {},
   tickInterval: null,
 
   // Metrics
@@ -64,6 +68,10 @@ const useGameStore = create((set, get) => ({
       sustainedTicks: 0,
       cacheState: {},
       failoverState: {},
+      queueState: {},
+      rateLimiterState: {},
+      autoScalerState: {},
+      chaosState: {},
       tickInterval: null,
       metrics: {
         rps: 0, totalCapacity: 0, overloadedServers: 0,
@@ -129,6 +137,11 @@ const useGameStore = create((set, get) => ({
       region: { label: 'Region', region: 'custom' },
       replica: { label: 'Read Replica', rps: 0, capacity: 3000, status: 'healthy' },
       healthCheck: { label: 'Health Check', rps: 0, status: 'healthy' },
+      apiGateway: { label: 'API Gateway', rps: 0, rateLimit: 10000, blocked: 0, status: 'healthy' },
+      messageQueue: { label: 'Message Queue', rps: 0, depth: 0, maxDepth: 5000, status: 'healthy' },
+      worker: { label: 'Worker', rps: 0, capacity: 2000, status: 'healthy' },
+      autoScaler: { label: 'Auto-Scaler', rps: 0, instanceCount: 0, scaleUpThreshold: 0.7, scaleDownThreshold: 0.3, cooldown: 3, status: 'healthy' },
+      circuitBreaker: { label: 'Circuit Breaker', rps: 0, cbState: 'closed', failures: 0, status: 'healthy' },
     };
 
     const newNode = {

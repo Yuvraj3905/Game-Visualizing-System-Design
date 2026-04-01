@@ -36,6 +36,11 @@
   --node-traffic: #f97316;
   --node-healthcheck: #ec4899;
   --node-replica: #8b5cf6;
+  --node-apigateway: #f43f5e;
+  --node-messagequeue: #14b8a6;
+  --node-worker: #0ea5e9;
+  --node-autoscaler: #f97316;
+  --node-circuitbreaker: #ef4444;
 
   /* Borders */
   --border-primary: #334155;

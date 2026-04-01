@@ -20,6 +20,11 @@ import CDNNode from './game-nodes/CDNNode';
 import RegionNode from './game-nodes/RegionNode';
 import ReplicaNode from './game-nodes/ReplicaNode';
 import HealthCheckNode from './game-nodes/HealthCheckNode';
+import APIGatewayNode from './game-nodes/APIGatewayNode';
+import MessageQueueNode from './game-nodes/MessageQueueNode';
+import WorkerNode from './game-nodes/WorkerNode';
+import AutoScalerNode from './game-nodes/AutoScalerNode';
+import CircuitBreakerNode from './game-nodes/CircuitBreakerNode';
 import DeletableNodeWrapper from './game-nodes/DeletableNodeWrapper';
 
 import HUD from './components/HUD';
@@ -56,6 +61,11 @@ const nodeTypes = {
   region: withDeletable(RegionNode),
   replica: withDeletable(ReplicaNode),
   healthCheck: withDeletable(HealthCheckNode),
+  apiGateway: withDeletable(APIGatewayNode),
+  messageQueue: withDeletable(MessageQueueNode),
+  worker: withDeletable(WorkerNode),
+  autoScaler: withDeletable(AutoScalerNode),
+  circuitBreaker: withDeletable(CircuitBreakerNode),
   trafficSource: TrafficSourceNode, // never deletable — part of level setup
 };
 
@@ -196,6 +206,11 @@ export default function App() {
                   region: '#64748b',
                   replica: '#8b5cf6',
                   healthCheck: '#ec4899',
+                  apiGateway: '#f43f5e',
+                  messageQueue: '#14b8a6',
+                  worker: '#0ea5e9',
+                  autoScaler: '#f97316',
+                  circuitBreaker: '#ef4444',
                 };
                 return colorMap[node.type] || '#666';
               }}

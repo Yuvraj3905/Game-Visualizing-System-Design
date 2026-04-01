@@ -20,4 +20,28 @@ export const LEVEL_OBJECTIVES = {
     { label: 'Survive disaster', check: (m) => m.survivedDisaster === true },
     { label: 'Maintain 5,000+ RPS', check: (m) => m.rps >= 5000 },
   ],
+  6: [
+    { label: 'Reach 12,000 RPS', check: (m) => m.rps >= 12000 },
+    { label: '0 overloaded servers', check: (m) => m.overloadedServers === 0 },
+    { label: 'Bot traffic blocked', check: (m) => m.totalBlocked > 0 },
+  ],
+  7: [
+    { label: 'Reach 10,000 RPS', check: (m) => m.rps >= 10000 },
+    { label: 'Latency < 150ms', check: (m) => m.avgLatency < 150 },
+    { label: '0 overloaded servers', check: (m) => m.overloadedServers === 0 },
+  ],
+  8: [
+    { label: 'Reach 15,000 RPS', check: (m) => m.rps >= 15000 },
+    { label: 'Latency < 100ms', check: (m) => m.avgLatency < 100 },
+    { label: '0 overloaded servers', check: (m) => m.overloadedServers === 0 },
+  ],
+  9: [
+    { label: 'Reach 12,000 RPS', check: (m) => m.rps >= 12000 },
+    { label: '0 overloaded servers', check: (m) => m.overloadedServers === 0 },
+  ],
+  10: [
+    { label: 'Reach 5,000 RPS', check: (m) => m.rps >= 5000 },
+    { label: '0 overloaded servers', check: (m) => m.overloadedServers === 0 },
+    { label: 'System still running', check: (m) => !m.systemDown },
+  ],
 };
