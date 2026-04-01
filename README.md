@@ -195,25 +195,15 @@ src/
 
 Contributions are welcome! Here are great ways to help:
 
-### Adding New Levels (Levels 6-10)
+### Contribution Ideas
 
-The biggest area for contribution. See the full design in [`docs/new-levels-plan.md`](docs/new-levels-plan.md). Each new level needs:
-
-1. **A new node component** in `src/game-nodes/` (e.g., `APIGatewayNode.jsx`)
-2. **A new simulator** in `src/engine/simulators/` (e.g., `RateLimiterSimulator.js`)
-3. **A level config entry** in `src/engine/LevelConfigs.js`
-4. **Objective checklist entry** in `src/engine/ObjectiveChecklist.js`
-
-### Other Contribution Ideas
-
-- Improve node layout algorithm (currently randomized positioning)
 - Add sound effects / background music
 - Add a metrics dashboard / graphs panel
 - Mobile responsiveness
 - Accessibility improvements
 - Add a sandbox/freeplay mode with no win/fail conditions
-- Persist progress to localStorage across sessions
 - Write tests (no test framework configured yet)
+- Add more levels beyond 10 (see [`docs/new-levels-plan.md`](docs/new-levels-plan.md) for the pattern)
 
 ### How to Contribute
 
