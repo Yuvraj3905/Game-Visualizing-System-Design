@@ -44,4 +44,29 @@ export const LEVEL_OBJECTIVES = {
     { label: '0 overloaded servers', check: (m) => m.overloadedServers === 0 },
     { label: 'System still running', check: (m) => !m.systemDown },
   ],
+  11: [
+    { label: 'Reach 20,000 RPS', check: (m) => m.rps >= 20000 },
+    { label: 'Latency < 100ms', check: (m) => m.avgLatency < 100 },
+    { label: '0 overloaded servers', check: (m) => m.overloadedServers === 0 },
+  ],
+  12: [
+    { label: 'Reach 15,000 RPS', check: (m) => m.rps >= 15000 },
+    { label: 'Latency < 150ms', check: (m) => m.avgLatency < 150 },
+    { label: '0 overloaded servers', check: (m) => m.overloadedServers === 0 },
+  ],
+  13: [
+    { label: 'Reach 25,000 RPS', check: (m) => m.rps >= 25000 },
+    { label: 'Region latency < 200ms', check: (m) => m.maxRegionLatency < 200 },
+    { label: '0 bounced users', check: (m) => m.bouncedUsers === 0 },
+  ],
+  14: [
+    { label: 'Reach 18,000 RPS', check: (m) => m.rps >= 18000 },
+    { label: 'Latency < 150ms', check: (m) => m.avgLatency < 150 },
+    { label: '0 overloaded servers', check: (m) => m.overloadedServers === 0 },
+  ],
+  15: [
+    { label: 'Reach 12,000 RPS', check: (m) => m.rps >= 12000 },
+    { label: '0 overloaded servers', check: (m) => m.overloadedServers === 0 },
+    { label: 'System still running', check: (m) => !m.systemDown },
+  ],
 };

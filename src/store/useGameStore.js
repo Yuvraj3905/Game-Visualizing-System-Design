@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { LEVEL_CONFIGS, TOTAL_LEVELS } from '../engine/LevelConfigs.js';
 import { runTick } from '../engine/LevelOrchestrator.js';
 import * as Sound from '../audio/SoundEngine.js';
+import { gradeArchitecture } from '../engine/ArchitectureGrader.js';
 
 // Restore saved progress from localStorage
 function loadProgress() {
@@ -34,6 +35,7 @@ const useGameStore = create((set, get) => ({
   showTour: false,
   budgetShake: false,
   audioMuted: false,
+  grade: null,
 
   // Game state
   money: LEVEL_CONFIGS[1].budget,
@@ -101,6 +103,7 @@ const useGameStore = create((set, get) => ({
       autoScalerState: {},
       chaosState: {},
       tickInterval: null,
+      grade: null,
       metrics: {
         rps: 0, totalCapacity: 0, overloadedServers: 0,
         dbLoad: 0, dbCapacity: 0, avgCacheHitRate: 0,
@@ -225,12 +228,14 @@ const useGameStore = create((set, get) => ({
     if (tickInterval) clearInterval(tickInterval);
     const newUnlocked = Math.min(level + 1, TOTAL_LEVELS);
     const finalUnlocked = Math.max(get().unlockedLevel, newUnlocked);
+    const grade = gradeArchitecture(get());
     saveProgress(level, finalUnlocked);
     set({
       simulationRunning: false,
       tickInterval: null,
       gameStatus: 'won',
       unlockedLevel: finalUnlocked,
+      grade,
     });
     Sound.stopMusic();
     Sound.playSuccess();
