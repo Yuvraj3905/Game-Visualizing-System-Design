@@ -96,8 +96,15 @@ export default function App() {
   }, [loadLevel]);
 
   useEffect(() => {
-    setNodes(storeNodes);
-  }, [storeNodes, setNodes]);
+    // Mark nodes as unconnected if they have no edges
+    const connectedIds = new Set();
+    storeEdges.forEach(e => { connectedIds.add(e.source); connectedIds.add(e.target); });
+    const marked = storeNodes.map(n => ({
+      ...n,
+      className: (!n.data?.isInitial && !connectedIds.has(n.id) && n.type !== 'trafficSource') ? 'unconnected' : '',
+    }));
+    setNodes(marked);
+  }, [storeNodes, storeEdges, setNodes]);
 
   useEffect(() => {
     setEdges(storeEdges);

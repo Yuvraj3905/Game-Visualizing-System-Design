@@ -60,6 +60,9 @@ export default function ComponentTray() {
         gap: 8,
         overflowY: 'auto',
         flexShrink: 0,
+        position: 'relative',
+        maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
       }}
     >
       <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.15em', marginBottom: 4 }}>

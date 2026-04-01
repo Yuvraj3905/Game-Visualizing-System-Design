@@ -18,6 +18,9 @@ export default function SustainBar() {
     }}>
       <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-healthy)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
         Sustaining... {Math.round(percent)}%
+        <span style={{ fontWeight: 500, color: 'var(--text-muted)', marginLeft: 6, fontSize: 10 }}>
+          ({(sustainedTicks / 2).toFixed(1)}s / {config.sustainSeconds}s)
+        </span>
       </span>
       <div style={{
         width: 300, height: 6, background: 'var(--bg-tertiary)', borderRadius: 3, overflow: 'hidden',

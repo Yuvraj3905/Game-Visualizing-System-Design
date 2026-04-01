@@ -344,7 +344,7 @@ export const LEVEL_CONFIGS = {
     unlockedComponents: ['trafficSource', 'server', 'database', 'loadBalancer', 'cache', 'messageQueue', 'worker'],
     initialNodes: [
       { id: 'traffic-1', type: 'trafficSource', position: { x: 50, y: 300 }, data: { label: 'Users', rps: 0, region: 'default' } },
-      { id: 'lb-1', type: 'loadBalancer', position: { x: 250, y: 300 }, data: { label: 'API Gateway', rps: 0, algorithm: 'round-robin', status: 'healthy' } },
+      { id: 'lb-1', type: 'loadBalancer', position: { x: 250, y: 300 }, data: { label: 'Load Balancer', rps: 0, algorithm: 'round-robin', status: 'healthy' } },
       { id: 'server-1', type: 'server', position: { x: 500, y: 300 }, data: { label: 'Monolith', rps: 0, capacity: 5000, status: 'healthy' } },
       { id: 'db-1', type: 'database', position: { x: 750, y: 300 }, data: { label: 'SQL Database', rps: 0, capacity: 4000, status: 'healthy' } },
     ],
@@ -452,8 +452,8 @@ export const LEVEL_CONFIGS = {
       return metrics.rps >= 5000 && metrics.overloadedServers === 0;
     },
     failCondition: (metrics, tickCount) => {
-      if (metrics.systemDown) return true;
-      if (tickCount > 20 && metrics.rps < 2000) return true;
+      if (tickCount > 30 && metrics.systemDown) return true;
+      if (tickCount > 40 && metrics.rps < 2000) return true;
       return false;
     },
     failMessage: 'Cascading failure! One broken component took down your entire system.',

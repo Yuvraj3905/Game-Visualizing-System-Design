@@ -9,6 +9,7 @@ const useGameStore = create((set, get) => ({
   gameStatus: 'intro',
   showLevelSelect: false,
   showTour: false,
+  budgetShake: false,
 
   // Game state
   money: LEVEL_CONFIGS[1].budget,
@@ -57,6 +58,7 @@ const useGameStore = create((set, get) => ({
     set({
       level: levelNum,
       gameStatus: 'intro',
+      showLevelSelect: false,
       money: config.budget,
       rps: 0,
       targetRps: 0,
@@ -126,7 +128,11 @@ const useGameStore = create((set, get) => ({
     const config = LEVEL_CONFIGS[level];
     const cost = config.nodeCosts[type] || 0;
 
-    if (money < cost) return false;
+    if (money < cost) {
+      set({ budgetShake: true });
+      setTimeout(() => set({ budgetShake: false }), 500);
+      return false;
+    }
 
     const defaults = {
       server: { label: 'Web Server', rps: 0, capacity: 1000, status: 'healthy' },
@@ -144,10 +150,22 @@ const useGameStore = create((set, get) => ({
       circuitBreaker: { label: 'Circuit Breaker', rps: 0, cbState: 'closed', failures: 0, status: 'healthy' },
     };
 
+    // Smart placement: find rightmost node and place to its right, staggered vertically
+    let pos = position;
+    if (!pos) {
+      const maxX = nodes.reduce((max, n) => Math.max(max, (n.position?.x || 0) + 180), 200);
+      const yPositions = nodes.map(n => n.position?.y || 0);
+      let y = 150;
+      while (yPositions.some(ny => Math.abs(ny - y) < 80)) {
+        y += 100;
+      }
+      pos = { x: maxX + 40, y };
+    }
+
     const newNode = {
       id: `${type}-${Date.now()}`,
       type,
-      position: position || { x: 300 + Math.random() * 200, y: 200 + Math.random() * 200 },
+      position: pos,
       data: { ...defaults[type] },
     };
 

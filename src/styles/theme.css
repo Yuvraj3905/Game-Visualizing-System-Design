@@ -243,3 +243,12 @@
   border: 2px solid var(--bg-secondary) !important;
   background: var(--color-info) !important;
 }
+
+.react-flow__node.unconnected .react-flow__handle {
+  animation: pulse-handle 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-handle {
+  0%, 100% { box-shadow: 0 0 4px var(--color-info-glow); transform: scale(1); }
+  50% { box-shadow: 0 0 12px var(--color-info-glow); transform: scale(1.3); }
+}

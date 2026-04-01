@@ -9,9 +9,9 @@ function StatCard({ icon, label, value, unit, color, animate, tooltip }) {
     <Tooltip text={tooltip} position="bottom">
       <div style={{
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
-        background: 'var(--bg-tertiary)', borderRadius: 12, padding: '10px 20px',
+        background: 'var(--bg-tertiary)', borderRadius: 12, padding: '8px 14px',
         border: '1px solid var(--border-primary)',
-        minWidth: 110,
+        minWidth: 90,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <Icon size={12} style={{ color: 'var(--text-muted)' }} />
@@ -31,7 +31,7 @@ function StatCard({ icon, label, value, unit, color, animate, tooltip }) {
 }
 
 export default function HUD() {
-  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour } = useGameStore();
+  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake } = useGameStore();
   const config = LEVEL_CONFIGS[level];
 
   const latencyColor = latency > 200 ? 'var(--color-critical)' : latency > 100 ? 'var(--color-warning)' : 'var(--color-healthy)';
@@ -58,10 +58,11 @@ export default function HUD() {
         </p>
       </div>
 
-      <div data-tour="hud-stats" style={{ display: 'flex', gap: 12 }}>
+      <div data-tour="hud-stats" style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
         <StatCard
           icon={DollarSign} label="Budget" value={`$${money.toLocaleString()}`}
-          color="var(--color-healthy)"
+          color={budgetShake ? 'var(--color-critical)' : 'var(--color-healthy)'}
+          animate={budgetShake}
           tooltip="Your remaining money to buy infrastructure components"
         />
         <StatCard

@@ -116,9 +116,9 @@ export default function GuidedTour() {
   };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 55 }}>
-      {/* Dark overlay with spotlight cutout */}
-      <div style={{ position: 'fixed', inset: 0, zIndex: 0 }} onClick={finish} />
+    <div style={{ position: 'fixed', inset: 0, zIndex: 55, pointerEvents: 'none' }}>
+      {/* Dark overlay — clickable to dismiss */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'auto' }} onClick={finish} />
 
       {rect && (
         <div
@@ -142,6 +142,7 @@ export default function GuidedTour() {
           position: 'fixed',
           ...tooltipPos,
           zIndex: 2,
+          pointerEvents: 'auto',
           background: 'var(--bg-secondary)',
           border: '1px solid var(--border-primary)',
           borderRadius: 16,
