@@ -37,8 +37,11 @@ Each level introduces a core infrastructure concept:
 | 3 | The Speed Demon | Caching |
 | 4 | The Global Expansion | CDNs & multi-region |
 | 5 | The Unstoppable App | Fault tolerance & failover |
-
-> Levels 6-10 (Rate Limiting, Message Queues, Microservices, Auto-Scaling, Chaos Engineering) are planned. See [`docs/new-levels-plan.md`](docs/new-levels-plan.md) for the full design.
+| 6 | The Gatekeeper | Rate limiting & API gateway |
+| 7 | The Decoupler | Message queues & async processing |
+| 8 | The Split | Microservices |
+| 9 | The Elastic Cloud | Auto-scaling |
+| 10 | Chaos Engineering | Fault injection & circuit breakers |
 
 ---
 
@@ -92,6 +95,20 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 - You can **sell back** purchased nodes (click the red X) for a 75% refund
 - You can **delete connections** by clicking an edge and pressing `Delete`
 - Budget is limited — plan your architecture before spending
+- New nodes pulse their handles when unconnected — drag an edge to wire them up
+- The sustain bar shows elapsed time so you know how long you need to hold
+
+### Live Demo
+
+**[Play it here](https://yuvraj3905.github.io/Game-Visualizing-System-Design/)**
+
+### Dev Mode
+
+Add `?dev=true` to the URL to access the dev panel with:
+- Jump to any level (1-10)
+- Unlock all levels
+- Add budget (+$5k / +$50k)
+- Skip intro, force win
 
 ---
 
@@ -126,7 +143,12 @@ src/
 │       ├── LoadBalancerSimulator.js   # Round-robin distribution
 │       ├── CacheSimulator.js          # Cache hit rate simulation
 │       ├── GeoLatencySimulator.js     # Multi-region latency + bounce rate
-│       └── FailoverSimulator.js       # Database failure + replica failover
+│       ├── FailoverSimulator.js       # Database failure + replica failover
+│       ├── RateLimiterSimulator.js    # API gateway rate limiting
+│       ├── QueueSimulator.js          # Message queue depth + drain
+│       ├── AutoScalerSimulator.js     # Dynamic capacity scaling
+│       ├── ChaosSimulator.js          # Random failure injection
+│       └── ServiceMeshSimulator.js    # Inter-service latency
 ├── game-nodes/                  # Custom React Flow node components
 │   ├── ServerNode.jsx           # Web server with load bar
 │   ├── DatabaseNode.jsx         # SQL database with QPS meter
@@ -134,6 +156,11 @@ src/
 │   ├── CacheNode.jsx            # Redis cache with hit rate bar
 │   ├── CDNNode.jsx              # Content delivery network
 │   ├── TrafficSourceNode.jsx    # User traffic generator
+│   ├── APIGatewayNode.jsx       # Rate limiter / API gateway
+│   ├── MessageQueueNode.jsx     # Async message buffer
+│   ├── WorkerNode.jsx           # Background job processor
+│   ├── AutoScalerNode.jsx       # Dynamic capacity scaler
+│   ├── CircuitBreakerNode.jsx   # Failure isolation switch
 │   ├── RegionNode.jsx           # Geographic region container
 │   ├── ReplicaNode.jsx          # Read replica for failover
 │   ├── HealthCheckNode.jsx      # Node health monitor
