@@ -1,0 +1,99 @@
+import { Lock, Check, ChevronRight, X } from 'lucide-react';
+import useGameStore from '../store/useGameStore';
+import { LEVEL_CONFIGS, TOTAL_LEVELS } from '../engine/LevelConfigs';
+
+export default function LevelSelect() {
+  const { showLevelSelect, toggleLevelSelect, unlockedLevel, level: currentLevel, loadLevel, stopSimulation } = useGameStore();
+
+  if (!showLevelSelect) return null;
+
+  const levels = Array.from({ length: TOTAL_LEVELS }, (_, i) => i + 1);
+
+  const handleSelect = (lvl) => {
+    if (lvl > unlockedLevel) return;
+    stopSimulation();
+    loadLevel(lvl);
+    toggleLevelSelect();
+  };
+
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, zIndex: 50,
+      background: 'rgba(15, 23, 42, 0.85)',
+      backdropFilter: 'blur(8px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}>
+      <div className="animate-slide-up" style={{
+        background: 'var(--bg-secondary)',
+        border: '1px solid var(--border-primary)',
+        borderRadius: 20,
+        padding: '32px',
+        maxWidth: 480,
+        width: '90%',
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: 'var(--text-primary)' }}>Select Level</h2>
+          <button
+            onClick={toggleLevelSelect}
+            style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 4 }}
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {levels.map(lvl => {
+            const config = LEVEL_CONFIGS[lvl];
+            const isLocked = lvl > unlockedLevel;
+            const isCompleted = lvl < unlockedLevel;
+            const isCurrent = lvl === currentLevel;
+
+            return (
+              <button
+                key={lvl}
+                onClick={() => handleSelect(lvl)}
+                disabled={isLocked}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 14,
+                  padding: '14px 16px', borderRadius: 12,
+                  background: isCurrent ? 'var(--color-info-bg)' : 'var(--bg-tertiary)',
+                  border: `1px solid ${isCurrent ? 'var(--color-info)' : 'var(--border-primary)'}`,
+                  cursor: isLocked ? 'not-allowed' : 'pointer',
+                  opacity: isLocked ? 0.4 : 1,
+                  textAlign: 'left',
+                  transition: 'all 150ms',
+                  width: '100%',
+                  color: 'inherit',
+                  fontFamily: 'inherit',
+                }}
+              >
+                <div style={{
+                  width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: isCompleted ? 'var(--color-healthy-bg)' : isLocked ? 'var(--bg-primary)' : 'var(--color-info-bg)',
+                  flexShrink: 0,
+                }}>
+                  {isLocked ? (
+                    <Lock size={16} style={{ color: 'var(--text-muted)' }} />
+                  ) : isCompleted ? (
+                    <Check size={16} style={{ color: 'var(--color-healthy)' }} />
+                  ) : (
+                    <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--color-info)' }}>{lvl}</span>
+                  )}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
+                    {config.name}
+                  </div>
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                    {config.subtitle}
+                  </div>
+                </div>
+                {!isLocked && <ChevronRight size={16} style={{ color: 'var(--text-muted)' }} />}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
