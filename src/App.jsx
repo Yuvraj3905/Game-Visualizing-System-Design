@@ -91,7 +91,9 @@ export default function App() {
   useEffect(() => {
     if (!initialized.current) {
       initialized.current = true;
-      loadLevel(1);
+      // Load saved level from store (restored from localStorage)
+      const savedLevel = useGameStore.getState().level;
+      loadLevel(savedLevel);
     }
   }, [loadLevel]);
 

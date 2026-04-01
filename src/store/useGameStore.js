@@ -2,10 +2,32 @@ import { create } from 'zustand';
 import { LEVEL_CONFIGS, TOTAL_LEVELS } from '../engine/LevelConfigs.js';
 import { runTick } from '../engine/LevelOrchestrator.js';
 
+// Restore saved progress from localStorage
+function loadProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('sdsim-progress'));
+    if (saved && saved.level && saved.unlockedLevel) {
+      return {
+        level: Math.min(saved.level, TOTAL_LEVELS),
+        unlockedLevel: Math.min(saved.unlockedLevel, TOTAL_LEVELS),
+      };
+    }
+  } catch { /* ignore corrupt data */ }
+  return { level: 1, unlockedLevel: 1 };
+}
+
+function saveProgress(level, unlockedLevel) {
+  try {
+    localStorage.setItem('sdsim-progress', JSON.stringify({ level, unlockedLevel }));
+  } catch { /* quota exceeded, ignore */ }
+}
+
+const savedProgress = loadProgress();
+
 const useGameStore = create((set, get) => ({
   // Level progression
-  level: 1,
-  unlockedLevel: 1,
+  level: savedProgress.level,
+  unlockedLevel: savedProgress.unlockedLevel,
   gameStatus: 'intro',
   showLevelSelect: false,
   showTour: false,
@@ -55,6 +77,7 @@ const useGameStore = create((set, get) => ({
     const { tickInterval } = get();
     if (tickInterval) clearInterval(tickInterval);
 
+    saveProgress(levelNum, get().unlockedLevel);
     set({
       level: levelNum,
       gameStatus: 'intro',
@@ -196,11 +219,13 @@ const useGameStore = create((set, get) => ({
     const { level, tickInterval } = get();
     if (tickInterval) clearInterval(tickInterval);
     const newUnlocked = Math.min(level + 1, TOTAL_LEVELS);
+    const finalUnlocked = Math.max(get().unlockedLevel, newUnlocked);
+    saveProgress(level, finalUnlocked);
     set({
       simulationRunning: false,
       tickInterval: null,
       gameStatus: 'won',
-      unlockedLevel: Math.max(get().unlockedLevel, newUnlocked),
+      unlockedLevel: finalUnlocked,
     });
   },
 
