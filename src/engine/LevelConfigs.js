@@ -451,8 +451,10 @@ export const LEVEL_CONFIGS = {
     winCondition: (metrics) => {
       return metrics.rps >= 5000 && metrics.overloadedServers === 0;
     },
-    failCondition: (metrics) => {
-      return metrics.systemDown || metrics.rps < 2000;
+    failCondition: (metrics, tickCount) => {
+      if (metrics.systemDown) return true;
+      if (tickCount > 20 && metrics.rps < 2000) return true;
+      return false;
     },
     failMessage: 'Cascading failure! One broken component took down your entire system.',
     failExplanation: 'Without circuit breakers and redundancy, a single failure cascades through your architecture. Circuit breakers isolate failures. Replicas and health checks provide automatic recovery.',

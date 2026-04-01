@@ -146,7 +146,7 @@ export function runTick(gameState) {
   let gameStatus = 'playing';
   let newSustainedTicks = sustainedTicks;
 
-  if (config.failCondition(metrics)) {
+  if (config.failCondition(metrics, newTickCount)) {
     gameStatus = 'failed';
     newSustainedTicks = 0;
   } else if (config.winCondition(metrics)) {
