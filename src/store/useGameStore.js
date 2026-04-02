@@ -37,6 +37,8 @@ const useGameStore = create((set, get) => ({
   audioMuted: false,
   grade: null,
   sandboxMode: false,
+  showConceptLibrary: false,
+  activeConceptId: null,
 
   // Game state
   money: LEVEL_CONFIGS[1].budget,
@@ -297,6 +299,10 @@ const useGameStore = create((set, get) => ({
     get().startSimulation();
     Sound.startMusic();
   },
+
+  setShowConceptLibrary: (val) => set({ showConceptLibrary: val, activeConceptId: null }),
+  setActiveConcept: (id) => set({ activeConceptId: id }),
+  closeConceptLibrary: () => set({ showConceptLibrary: false, activeConceptId: null }),
 
   toggleAudioMute: () => {
     const muted = Sound.toggleMute();

@@ -1,4 +1,4 @@
-import { DollarSign, Activity, Clock, Heart, Users, RotateCcw, List, HelpCircle, Volume2, VolumeX } from 'lucide-react';
+import { DollarSign, Activity, Clock, Heart, Users, RotateCcw, List, HelpCircle, Volume2, VolumeX, BookOpen } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
 import Tooltip from './Tooltip';
@@ -33,7 +33,7 @@ function StatCard({ icon, label, value, unit, color, animate, tooltip }) {
 }
 
 export default function HUD() {
-  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute, sandboxMode } = useGameStore();
+  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute, sandboxMode, setShowConceptLibrary } = useGameStore();
   const config = LEVEL_CONFIGS[level] || LEVEL_CONFIGS[0];
 
   const latencyColor = latency > 200 ? 'var(--color-critical)' : latency > 100 ? 'var(--color-warning)' : 'var(--color-healthy)';
@@ -129,6 +129,18 @@ export default function HUD() {
             }}
           >
             <List size={14} /> Levels
+          </button>
+        </Tooltip>
+        <Tooltip text="Interactive concept library" position="bottom">
+          <button
+            onClick={() => setShowConceptLibrary(true)}
+            style={{
+              padding: '8px 12px', background: 'var(--bg-tertiary)', color: 'var(--text-secondary)',
+              border: '1px solid var(--border-primary)', borderRadius: 10, fontSize: 13,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+            }}
+          >
+            <BookOpen size={14} /> Learn
           </button>
         </Tooltip>
         <ExportButton />
