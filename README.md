@@ -15,9 +15,10 @@
 </p>
 
 <p align="center">
-  <a href="#getting-started">Getting Started</a> &nbsp;&bull;&nbsp;
-  <a href="#how-to-play">How to Play</a> &nbsp;&bull;&nbsp;
+  <a href="https://yuvraj3905.github.io/Game-Visualizing-System-Design/">Play Now</a> &nbsp;&bull;&nbsp;
+  <a href="#features">Features</a> &nbsp;&bull;&nbsp;
   <a href="#levels">Levels</a> &nbsp;&bull;&nbsp;
+  <a href="#concept-library">Concept Library</a> &nbsp;&bull;&nbsp;
   <a href="#architecture">Architecture</a> &nbsp;&bull;&nbsp;
   <a href="#contributing">Contributing</a>
 </p>
@@ -28,7 +29,32 @@
 
 System Design Sim is an interactive, visual system design simulator. Instead of reading about load balancers and caches in a textbook, you **build** them — drag components onto a canvas, wire them together, and see if your architecture survives under real traffic.
 
-Each level introduces a core infrastructure concept:
+**[Play it here](https://yuvraj3905.github.io/Game-Visualizing-System-Design/)**
+
+---
+
+## Features
+
+- **15 levels** — from "what's a server?" to designing Netflix's CDN
+- **5 real-world scenarios** — modeled after Twitter, Uber, Netflix, WhatsApp, Stripe
+- **8 interactive concept playgrounds** — CAP theorem, consistent hashing, sharding, and more
+- **Architecture grading** — S/A/B/C/D/F scores on cost, latency, resilience, simplicity
+- **Failure post-mortems** — bottleneck analysis, cascade visualization, smart fix suggestions
+- **Sandbox mode** — unlimited budget, all components, no objectives
+- **Export as PNG** — download your architecture diagram as a shareable image
+- **Synthesized sound effects & music** — all generated via Web Audio API, zero audio files
+- **Guided tour & tooltips** — onboarding for new players, hover tooltips on everything
+- **Live objective panel** — real-time checklist with completion counter
+- **Sell-back & delete** — undo purchases (75% refund), delete edges with Delete key
+- **Session persistence** — progress saved to localStorage, resume where you left off
+- **Deep-dive references** — curated links to real-world engineering blogs on every win screen
+- **Dev mode** — `?dev=true` for jump-to-level, unlock all, add budget, force win
+
+---
+
+## Levels
+
+### Tutorial Levels (1-10)
 
 | Level | Name | Concept |
 |:-----:|------|---------|
@@ -43,7 +69,7 @@ Each level introduces a core infrastructure concept:
 | 9 | The Elastic Cloud | Auto-scaling |
 | 10 | Chaos Engineering | Fault injection & circuit breakers |
 
-**Real-World Scenarios:**
+### Real-World Scenarios (11-15)
 
 | Level | Name | Based On |
 |:-----:|------|----------|
@@ -52,6 +78,23 @@ Each level introduces a core infrastructure concept:
 | 13 | Design Netflix Streaming | Global CDN, edge computing |
 | 14 | WhatsApp Message Delivery | Guaranteed delivery, async |
 | 15 | Stripe's Payment Pipeline | Exactly-once processing, failover |
+
+---
+
+## Concept Library
+
+Click the **"Learn"** button in the toolbar to access 8 interactive system design playgrounds:
+
+| Concept | What You Can Do |
+|---------|----------------|
+| **CAP Theorem** | Click vertices on a triangle to pick 2-of-3, see which databases fit each combination |
+| **Consistent Hashing** | Add/remove servers on a hash ring, watch keys redistribute with minimal movement |
+| **Database Sharding** | Toggle shard keys, see data distribute across shards, detect hot shards |
+| **Load Balancing** | Fire requests through round-robin / least-connections / weighted, watch animated distribution |
+| **Caching Strategies** | Step-by-step animation of write-through / write-behind / cache-aside with latency counter |
+| **Replication** | Toggle leader-follower / multi-leader / leaderless, kill the leader, watch failover |
+| **Message Queues** | Send messages through point-to-point / pub-sub / fan-out, watch delivery patterns |
+| **Rate Limiting** | Test token bucket / sliding window / fixed window with burst and steady stream |
 
 ---
 
@@ -65,20 +108,15 @@ Each level introduces a core infrastructure concept:
 ### Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/Yuvraj3905/Game-Visualizing-System-Design.git
 cd Game-Visualizing-System-Design
-
-# Install dependencies
 npm install
-
-# Start the dev server
 npm run dev
 ```
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### Other Commands
+### Commands
 
 | Command | Description |
 |---------|-------------|
@@ -95,27 +133,26 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 2. **Drag components** from the left tray onto the canvas (or click to add)
 3. **Connect nodes** by dragging between the blue handles on each node
 4. **Click "Spike Traffic"** to increase load and test your architecture
-5. **Watch the objective panel** (bottom-right) — goals check off in real-time as you meet them
-6. **Sustain** the win conditions for 10 seconds to complete the level
+5. **Watch the objective panel** (bottom-right) — goals check off in real-time
+6. **Sustain** the win conditions to complete the level
+7. **Review your grade** — optimize for cost, latency, resilience, and simplicity
 
 ### Tips
 
 - Hover over any UI element for a tooltip explaining what it does
-- First-time players get a guided tour (restart it anytime via the **?** button)
-- You can **sell back** purchased nodes (click the red X) for a 75% refund
-- You can **delete connections** by clicking an edge and pressing `Delete`
-- Budget is limited — plan your architecture before spending
+- First-time players get a guided tour (restart anytime via the **?** button)
+- **Sell back** purchased nodes (click the red X) for a 75% refund
+- **Delete connections** by clicking an edge and pressing `Delete`
 - New nodes pulse their handles when unconnected — drag an edge to wire them up
-- The sustain bar shows elapsed time so you know how long you need to hold
-
-### Live Demo
-
-**[Play it here](https://yuvraj3905.github.io/Game-Visualizing-System-Design/)**
+- The sustain bar shows elapsed time (e.g. "4.5s / 10s")
+- Click **"Learn"** to explore interactive concept playgrounds anytime
+- Use **Sandbox Mode** (from Level Select) to experiment with no restrictions
+- **Export** your architecture as a PNG to share with others
 
 ### Dev Mode
 
-Add `?dev=true` to the URL to access the dev panel with:
-- Jump to any level (1-10)
+Add `?dev=true` to the URL for:
+- Jump to any level (1-15)
 - Unlock all levels
 - Add budget (+$5k / +$50k)
 - Skip intro, force win
@@ -131,6 +168,7 @@ Add `?dev=true` to the URL to access the dev panel with:
 | Graph Canvas | [React Flow 11](https://reactflow.dev/) |
 | State Management | [Zustand 5](https://zustand.docs.pmnd.rs/) |
 | Icons | [Lucide React](https://lucide.dev/) |
+| Audio | Web Audio API (synthesized, zero audio files) |
 | Styling | CSS Variables + Inline Styles (dark theme) |
 
 ---
@@ -141,52 +179,71 @@ Add `?dev=true` to the URL to access the dev panel with:
 src/
 ├── App.jsx                      # Main app — React Flow canvas, layout, routing
 ├── store/
-│   └── useGameStore.js          # Zustand store — single source of truth for all game state
+│   └── useGameStore.js          # Zustand store — single source of truth
+├── audio/
+│   └── SoundEngine.js           # Synthesized sound effects & background music
 ├── engine/
-│   ├── LevelConfigs.js          # Level definitions (budget, nodes, win/fail conditions)
-│   ├── LevelOrchestrator.js     # Main simulation loop — runs every 500ms tick
-│   ├── MetricsCollector.js      # Calculates capacity, latency, health from game state
-│   ├── TopologyWalker.js        # Graph traversal — distributes traffic through edges
-│   ├── ObjectiveChecklist.js    # Per-level win condition checklist definitions
+│   ├── LevelConfigs.js          # 15 level definitions + sandbox config
+│   ├── LevelOrchestrator.js     # Main simulation loop (500ms ticks)
+│   ├── MetricsCollector.js      # Capacity, latency, health calculations
+│   ├── TopologyWalker.js        # Graph traversal for traffic distribution
+│   ├── ObjectiveChecklist.js    # Per-level win condition checklists
+│   ├── ArchitectureGrader.js    # Post-win grading (cost/latency/resilience/simplicity)
 │   └── simulators/
-│       ├── TrafficSimulator.js        # Traffic ramp-up
-│       ├── LoadBalancerSimulator.js   # Round-robin distribution
-│       ├── CacheSimulator.js          # Cache hit rate simulation
-│       ├── GeoLatencySimulator.js     # Multi-region latency + bounce rate
-│       ├── FailoverSimulator.js       # Database failure + replica failover
-│       ├── RateLimiterSimulator.js    # API gateway rate limiting
-│       ├── QueueSimulator.js          # Message queue depth + drain
-│       ├── AutoScalerSimulator.js     # Dynamic capacity scaling
-│       ├── ChaosSimulator.js          # Random failure injection
-│       └── ServiceMeshSimulator.js    # Inter-service latency
-├── game-nodes/                  # Custom React Flow node components
-│   ├── ServerNode.jsx           # Web server with load bar
-│   ├── DatabaseNode.jsx         # SQL database with QPS meter
-│   ├── LoadBalancerNode.jsx     # Traffic distributor
-│   ├── CacheNode.jsx            # Redis cache with hit rate bar
-│   ├── CDNNode.jsx              # Content delivery network
-│   ├── TrafficSourceNode.jsx    # User traffic generator
-│   ├── APIGatewayNode.jsx       # Rate limiter / API gateway
-│   ├── MessageQueueNode.jsx     # Async message buffer
-│   ├── WorkerNode.jsx           # Background job processor
-│   ├── AutoScalerNode.jsx       # Dynamic capacity scaler
-│   ├── CircuitBreakerNode.jsx   # Failure isolation switch
-│   ├── RegionNode.jsx           # Geographic region container
-│   ├── ReplicaNode.jsx          # Read replica for failover
-│   ├── HealthCheckNode.jsx      # Node health monitor
-│   └── DeletableNodeWrapper.jsx # HOC adding sell-back button to user-added nodes
-├── components/                  # UI components
-│   ├── HUD.jsx                  # Top stats bar (budget, traffic, latency, health)
-│   ├── ComponentTray.jsx        # Left sidebar with draggable node palette
-│   ├── ObjectivePanel.jsx       # Bottom-right live objective checklist
-│   ├── GuidedTour.jsx           # Step-by-step onboarding spotlight tour
-│   ├── Tooltip.jsx              # Reusable hover tooltip component
-│   ├── SustainBar.jsx           # Win condition sustain progress bar
-│   ├── AnimatedEdge.jsx         # Custom edge with flowing dot animation
-│   ├── LevelIntro.jsx           # Level start briefing modal
-│   ├── WinScreen.jsx            # Victory screen with confetti
-│   ├── FailScreen.jsx           # Failure screen with explanation
-│   └── LevelSelect.jsx          # Level selection modal
+│       ├── TrafficSimulator.js
+│       ├── LoadBalancerSimulator.js
+│       ├── CacheSimulator.js
+│       ├── GeoLatencySimulator.js
+│       ├── FailoverSimulator.js
+│       ├── RateLimiterSimulator.js
+│       ├── QueueSimulator.js
+│       ├── AutoScalerSimulator.js
+│       ├── ChaosSimulator.js
+│       └── ServiceMeshSimulator.js
+├── game-nodes/                  # 14 custom React Flow node components
+│   ├── ServerNode.jsx
+│   ├── DatabaseNode.jsx
+│   ├── LoadBalancerNode.jsx
+│   ├── CacheNode.jsx
+│   ├── CDNNode.jsx
+│   ├── TrafficSourceNode.jsx
+│   ├── APIGatewayNode.jsx
+│   ├── MessageQueueNode.jsx
+│   ├── WorkerNode.jsx
+│   ├── AutoScalerNode.jsx
+│   ├── CircuitBreakerNode.jsx
+│   ├── RegionNode.jsx
+│   ├── ReplicaNode.jsx
+│   ├── HealthCheckNode.jsx
+│   └── DeletableNodeWrapper.jsx
+├── components/
+│   ├── HUD.jsx                  # Top stats bar + toolbar buttons
+│   ├── ComponentTray.jsx        # Left sidebar with draggable components
+│   ├── ObjectivePanel.jsx       # Live objective checklist (bottom-right)
+│   ├── GuidedTour.jsx           # Step-by-step onboarding tour
+│   ├── Tooltip.jsx              # Reusable hover tooltip
+│   ├── SustainBar.jsx           # Win condition progress bar
+│   ├── AnimatedEdge.jsx         # Flowing dot edge animation
+│   ├── LevelIntro.jsx           # Level briefing modal
+│   ├── WinScreen.jsx            # Victory screen + grade card + references
+│   ├── FailScreen.jsx           # Failure screen + post-mortem analysis
+│   ├── FailurePostMortem.jsx    # Bottleneck analysis, failure chain, suggestions
+│   ├── LevelSelect.jsx          # Level selection + sandbox mode
+│   ├── ExportButton.jsx         # Export architecture as PNG
+│   ├── SandboxMode.jsx          # Sandbox mode banner
+│   └── DevPanel.jsx             # Dev tools (?dev=true)
+├── concepts/
+│   ├── ConceptLibrary.jsx       # Concept card grid modal
+│   ├── ConceptViewer.jsx        # Concept viewer shell + routing
+│   └── concepts/
+│       ├── CAPTheorem.jsx
+│       ├── ConsistentHashing.jsx
+│       ├── DatabaseSharding.jsx
+│       ├── LoadBalancingAlgos.jsx
+│       ├── CachingStrategies.jsx
+│       ├── Replication.jsx
+│       ├── MessageQueuePatterns.jsx
+│       └── RateLimiting.jsx
 └── styles/
     └── theme.css                # CSS variables, animations, node styles
 ```
@@ -194,26 +251,27 @@ src/
 ### Key Design Decisions
 
 - **Zustand store is the single source of truth.** React Flow's local state syncs from the store via `useEffect`.
-- **Simulation engine is pure functions.** `runTick()` takes state, returns updates — no side effects. Makes it easy to test and extend.
+- **Simulation engine is pure functions.** `runTick()` takes state, returns updates — no side effects.
 - **Simulators are modular.** Each level activates only the simulators it needs via `activeSimulators`.
-- **No external tooltip/tour libraries.** All onboarding UI is custom-built and lightweight.
-- **Traffic distribution follows the graph topology.** The `TopologyWalker` does DFS traversal through edges to distribute RPS.
+- **Zero external UI/audio libraries.** Tooltips, tour, sound effects, and concept visualizations are all custom-built.
+- **All sounds synthesized.** Web Audio API oscillators generate every click, alarm, and music note — no audio files.
+- **Traffic follows the graph topology.** `TopologyWalker` does DFS through edges to distribute RPS.
+- **Concept playgrounds are self-contained.** Each uses SVG + requestAnimationFrame with proper cleanup.
 
 ---
 
 ## Contributing
 
-Contributions are welcome! Here are great ways to help:
+Contributions are welcome! Here are some ideas:
 
-### Contribution Ideas
-
-- Add sound effects / background music
-- Add a metrics dashboard / graphs panel
-- Mobile responsiveness
-- Accessibility improvements
-- Add a sandbox/freeplay mode with no win/fail conditions
+- Mobile responsiveness and touch-friendly interactions
+- Accessibility improvements (screen reader labels, keyboard navigation, high contrast)
 - Write tests (no test framework configured yet)
-- Add more levels beyond 10 (see [`docs/new-levels-plan.md`](docs/new-levels-plan.md) for the pattern)
+- Add more levels beyond 15
+- Metrics dashboard with live charts (RPS/latency over time)
+- Multiplayer co-op mode
+- Custom level editor
+- Localization / i18n
 
 ### How to Contribute
 
@@ -244,7 +302,13 @@ git push origin feature/my-feature
 - Functional components with hooks
 - State changes go through the Zustand store
 - Simulation logic stays in `src/engine/` as pure functions
-- Keep node components focused — use the `DeletableNodeWrapper` HOC pattern for cross-cutting concerns
+- SVG for concept visualizations, Canvas API for export
+
+---
+
+## Vision
+
+See [`docs/VISION.md`](docs/VISION.md) for the full product roadmap — from daily challenges and leaderboards to an AI architecture reviewer and multiplayer mode.
 
 ---
 
@@ -255,7 +319,7 @@ This project is open source. Feel free to use, modify, and distribute.
 ---
 
 <p align="center">
-  Built with React + Vite + React Flow + Zustand
+  Built with React + Vite + React Flow + Zustand + Web Audio API
   <br />
   <sub>Learn system design the fun way.</sub>
 </p>
