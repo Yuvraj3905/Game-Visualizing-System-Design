@@ -38,6 +38,7 @@ import AnimatedEdge from './components/AnimatedEdge';
 import ObjectivePanel from './components/ObjectivePanel';
 import GuidedTour from './components/GuidedTour';
 import DevPanel from './components/DevPanel';
+import SandboxBanner from './components/SandboxMode';
 import * as Sound from './audio/SoundEngine';
 
 const isDevMode = new URLSearchParams(window.location.search).get('dev') === 'true';
@@ -250,6 +251,7 @@ export default function App() {
       <FailScreen />
       <LevelSelect />
       <GuidedTour />
+      <SandboxBanner />
       {isDevMode && <DevPanel />}
     </div>
   );

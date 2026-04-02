@@ -1,9 +1,9 @@
-import { Lock, Check, ChevronRight, X } from 'lucide-react';
+import { Lock, Check, ChevronRight, X, Beaker } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS, TOTAL_LEVELS } from '../engine/LevelConfigs';
 
 export default function LevelSelect() {
-  const { showLevelSelect, toggleLevelSelect, unlockedLevel, level: currentLevel, loadLevel, stopSimulation } = useGameStore();
+  const { showLevelSelect, toggleLevelSelect, unlockedLevel, level: currentLevel, loadLevel, stopSimulation, startSandbox } = useGameStore();
 
   if (!showLevelSelect) return null;
 
@@ -92,6 +92,33 @@ export default function LevelSelect() {
               </button>
             );
           })}
+
+          {/* Sandbox Mode Button */}
+          <button
+            onClick={() => { toggleLevelSelect(); startSandbox(); }}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 14,
+              padding: '14px 16px', borderRadius: 12,
+              background: 'var(--bg-primary)',
+              border: '1px dashed var(--text-accent)',
+              cursor: 'pointer', textAlign: 'left',
+              transition: 'all 150ms', width: '100%',
+              color: 'inherit', fontFamily: 'inherit',
+              marginTop: 8,
+            }}
+          >
+            <div style={{
+              width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'rgba(56, 189, 248, 0.1)', flexShrink: 0,
+            }}>
+              <Beaker size={18} style={{ color: 'var(--text-accent)' }} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-accent)' }}>Sandbox Mode</div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Unlimited budget, all components, no objectives</div>
+            </div>
+            <ChevronRight size={16} style={{ color: 'var(--text-accent)' }} />
+          </button>
         </div>
       </div>
     </div>

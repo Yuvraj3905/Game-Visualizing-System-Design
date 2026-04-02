@@ -3,6 +3,7 @@ import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
 import Tooltip from './Tooltip';
 import * as Sound from '../audio/SoundEngine';
+import ExportButton from './ExportButton';
 
 function StatCard({ icon, label, value, unit, color, animate, tooltip }) {
   const Icon = icon;
@@ -32,8 +33,8 @@ function StatCard({ icon, label, value, unit, color, animate, tooltip }) {
 }
 
 export default function HUD() {
-  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute } = useGameStore();
-  const config = LEVEL_CONFIGS[level];
+  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute, sandboxMode } = useGameStore();
+  const config = LEVEL_CONFIGS[level] || LEVEL_CONFIGS[0];
 
   const latencyColor = latency > 200 ? 'var(--color-critical)' : latency > 100 ? 'var(--color-warning)' : 'var(--color-healthy)';
   const healthColor = metrics.healthPercent > 70 ? 'var(--color-healthy)' : metrics.healthPercent > 30 ? 'var(--color-warning)' : 'var(--color-critical)';
@@ -55,7 +56,7 @@ export default function HUD() {
           System Design <span style={{ color: 'var(--text-accent)' }}>Sim</span>
         </h1>
         <p style={{ margin: 0, fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 600 }}>
-          Level {level} — {config.name}
+          {sandboxMode ? 'Sandbox — Freeplay' : `Level ${level} — ${config.name}`}
         </p>
       </div>
 
@@ -130,6 +131,7 @@ export default function HUD() {
             <List size={14} /> Levels
           </button>
         </Tooltip>
+        <ExportButton />
         <Tooltip text="Take a guided tour of the interface" position="bottom">
           <button
             onClick={() => setShowTour(true)}

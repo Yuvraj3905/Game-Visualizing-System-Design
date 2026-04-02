@@ -36,6 +36,7 @@ const useGameStore = create((set, get) => ({
   budgetShake: false,
   audioMuted: false,
   grade: null,
+  sandboxMode: false,
 
   // Game state
   money: LEVEL_CONFIGS[1].budget,
@@ -301,6 +302,56 @@ const useGameStore = create((set, get) => ({
     const muted = Sound.toggleMute();
     set({ audioMuted: muted });
     if (!muted && get().gameStatus === 'playing') Sound.startMusic();
+  },
+
+  startSandbox: () => {
+    const { tickInterval } = get();
+    if (tickInterval) clearInterval(tickInterval);
+    Sound.stopMusic();
+
+    set({
+      sandboxMode: true,
+      level: 0,
+      gameStatus: 'playing',
+      showLevelSelect: false,
+      money: 999999,
+      rps: 0,
+      targetRps: 0,
+      latency: 20,
+      nodes: [
+        { id: 'traffic-1', type: 'trafficSource', position: { x: 100, y: 300 }, data: { label: 'Users', rps: 0, region: 'default', isInitial: true } },
+      ],
+      edges: [],
+      simulationRunning: false,
+      tickCount: 0,
+      sustainedTicks: 0,
+      cacheState: {},
+      failoverState: {},
+      queueState: {},
+      rateLimiterState: {},
+      autoScalerState: {},
+      chaosState: {},
+      tickInterval: null,
+      grade: null,
+      metrics: {
+        rps: 0, totalCapacity: 0, overloadedServers: 0,
+        dbLoad: 0, dbCapacity: 0, avgCacheHitRate: 0,
+        avgLatency: 0, maxRegionLatency: 0, bouncedUsers: 0,
+        healthPercent: 100, systemDown: false, survivedDisaster: false,
+      },
+    });
+
+    get().startSimulation();
+    Sound.startMusic();
+  },
+
+  exitSandbox: () => {
+    const { tickInterval } = get();
+    if (tickInterval) clearInterval(tickInterval);
+    Sound.stopMusic();
+    const savedLevel = loadProgress().level || 1;
+    set({ sandboxMode: false, simulationRunning: false, tickInterval: null });
+    get().loadLevel(savedLevel);
   },
 }));
 

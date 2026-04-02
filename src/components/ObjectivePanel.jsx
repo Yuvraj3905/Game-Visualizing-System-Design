@@ -6,11 +6,13 @@ import { LEVEL_OBJECTIVES } from '../engine/ObjectiveChecklist';
 
 export default function ObjectivePanel() {
   const [expanded, setExpanded] = useState(true);
-  const { level, gameStatus, metrics, rps } = useGameStore();
+  const { level, gameStatus, metrics, rps, sandboxMode } = useGameStore();
 
   if (gameStatus !== 'playing') return null;
+  if (sandboxMode) return null;
 
   const config = LEVEL_CONFIGS[level];
+  if (!config) return null;
   const objectives = LEVEL_OBJECTIVES[level] || [];
   const enrichedMetrics = { ...metrics, rps };
   const completedCount = objectives.filter(o => o.check(enrichedMetrics)).length;

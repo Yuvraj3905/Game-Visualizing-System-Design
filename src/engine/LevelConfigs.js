@@ -1,4 +1,28 @@
 export const LEVEL_CONFIGS = {
+  0: {
+    name: 'Sandbox',
+    subtitle: 'Freeplay Mode',
+    budget: 999999,
+    initialTraffic: 0,
+    targetTraffic: 50000,
+    baseLatency: 20,
+    congestionFactor: 0.03,
+    sustainSeconds: 999,
+    unlockedComponents: ['trafficSource', 'server', 'database', 'loadBalancer', 'cache', 'cdn', 'region', 'replica', 'healthCheck', 'apiGateway', 'messageQueue', 'worker', 'autoScaler', 'circuitBreaker'],
+    initialNodes: [
+      { id: 'traffic-1', type: 'trafficSource', position: { x: 100, y: 300 }, data: { label: 'Users', rps: 0, region: 'default' } },
+    ],
+    initialEdges: [],
+    winCondition: () => false,
+    failCondition: () => false,
+    failMessage: '',
+    failExplanation: '',
+    winLesson: '',
+    narrative: { title: 'Sandbox', description: 'Build whatever you want.', objective: 'No objectives — experiment freely!', hint: 'Try building a full production architecture from scratch.' },
+    nodeCosts: { server: 200, database: 300, loadBalancer: 400, cache: 500, cdn: 600, region: 0, replica: 700, healthCheck: 300, apiGateway: 800, messageQueue: 600, worker: 350, autoScaler: 1000, circuitBreaker: 800 },
+    activeSimulators: ['traffic', 'loadBalancer', 'cache'],
+  },
+
   1: {
     name: 'The Monolith',
     subtitle: 'Vertical vs. Horizontal Scaling',
@@ -748,4 +772,4 @@ export const LEVEL_CONFIGS = {
   },
 };
 
-export const TOTAL_LEVELS = Object.keys(LEVEL_CONFIGS).length;
+export const TOTAL_LEVELS = Object.keys(LEVEL_CONFIGS).filter(k => k !== '0').length;

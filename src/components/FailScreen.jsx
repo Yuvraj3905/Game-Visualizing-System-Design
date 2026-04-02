@@ -1,6 +1,7 @@
 import { AlertTriangle, RotateCcw, Lightbulb } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
+import FailurePostMortem from './FailurePostMortem';
 
 export default function FailScreen() {
   const { level, gameStatus, retryLevel, metrics } = useGameStore();
@@ -18,14 +19,15 @@ export default function FailScreen() {
         background: isBlackout ? 'rgba(0, 0, 0, 0.95)' : 'rgba(15, 23, 42, 0.9)',
         backdropFilter: 'blur(8px)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
+        overflowY: 'auto', padding: '20px 0',
       }}
     >
       <div className="animate-slide-up" style={{
         background: isBlackout ? 'var(--bg-primary)' : 'var(--bg-secondary)',
         border: '1px solid var(--color-critical)',
         borderRadius: 20,
-        padding: 40,
-        maxWidth: 520,
+        padding: '32px 36px',
+        maxWidth: 540,
         width: '90%',
         textAlign: 'center',
       }}>
@@ -66,12 +68,15 @@ export default function FailScreen() {
           </p>
         </div>
 
+        <FailurePostMortem />
+
         <button
           onClick={retryLevel}
           style={{
             padding: '12px 32px', background: 'var(--color-critical)', color: 'white',
             border: 'none', borderRadius: 12, fontWeight: 700, fontSize: 15,
             cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8,
+            marginTop: 8,
           }}
         >
           <RotateCcw size={16} /> Try Again
