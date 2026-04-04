@@ -1,6 +1,7 @@
 import { Trophy, ArrowRight, RotateCcw, ExternalLink } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS, TOTAL_LEVELS } from '../engine/LevelConfigs';
+import RadarChart from './RadarChart';
 
 const CONFETTI = Array.from({ length: 30 }, (_, i) => ({
   left: `${(i * 3.33 + (i * 7) % 10)}%`,
@@ -14,18 +15,6 @@ const GRADE_COLORS = {
   S: '#fbbf24', A: '#22c55e', B: '#3b82f6', C: '#94a3b8', D: '#f59e0b', F: '#ef4444',
 };
 
-function GradeBar({ label, score }) {
-  const color = score >= 80 ? 'var(--color-healthy)' : score >= 60 ? 'var(--color-info)' : score >= 40 ? 'var(--color-warning)' : 'var(--color-critical)';
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-      <span style={{ fontSize: 11, color: 'var(--text-muted)', width: 70, textAlign: 'right', flexShrink: 0 }}>{label}</span>
-      <div style={{ flex: 1, height: 6, background: 'var(--bg-tertiary)', borderRadius: 3, overflow: 'hidden' }}>
-        <div style={{ height: '100%', width: `${score}%`, background: color, borderRadius: 3, transition: 'width 600ms ease' }} />
-      </div>
-      <span style={{ fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color, width: 28, fontWeight: 700 }}>{score}</span>
-    </div>
-  );
-}
 
 export default function WinScreen() {
   const { level, gameStatus, loadLevel, grade } = useGameStore();
@@ -100,11 +89,13 @@ export default function WinScreen() {
                 {grade.overall}/100
               </span>
             </div>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <GradeBar label="Cost" score={grade.costScore} />
-              <GradeBar label="Latency" score={grade.latencyScore} />
-              <GradeBar label="Resilience" score={grade.resilienceScore} />
-              <GradeBar label="Simplicity" score={grade.complexityScore} />
+            <div style={{ flex: 1 }}>
+              <RadarChart scores={{
+                cost: grade.costScore,
+                latency: grade.latencyScore,
+                resilience: grade.resilienceScore,
+                simplicity: grade.complexityScore,
+              }} />
             </div>
           </div>
         )}
