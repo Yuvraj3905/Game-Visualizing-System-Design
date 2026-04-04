@@ -63,6 +63,15 @@ export const LEVEL_CONFIGS = {
     ],
     nodeCosts: { server: 200, database: 300 },
     activeSimulators: ['traffic'],
+    idealSolution: {
+      description: 'Horizontal scaling with multiple servers',
+      nodes: [
+        { type: 'trafficSource', label: 'Users', count: 1 },
+        { type: 'server', label: 'Web Server', count: 3 },
+        { type: 'database', label: 'SQL Database', count: 1 },
+      ],
+      explanation: 'Distribute traffic across 3 servers (500 RPS each) instead of overloading one. Total capacity: 1,500 RPS > 1,000 RPS target.',
+    },
   },
 
   2: {
@@ -109,6 +118,16 @@ export const LEVEL_CONFIGS = {
     ],
     nodeCosts: { server: 300, loadBalancer: 400, database: 300 },
     activeSimulators: ['traffic', 'loadBalancer'],
+    idealSolution: {
+      description: 'Load balancer distributing to all servers',
+      nodes: [
+        { type: 'trafficSource', label: 'Users', count: 1 },
+        { type: 'loadBalancer', label: 'Load Balancer', count: 1 },
+        { type: 'server', label: 'Web Server', count: 3 },
+        { type: 'database', label: 'SQL Database', count: 1 },
+      ],
+      explanation: 'A load balancer routes traffic evenly across all 3 servers. Without it, only the directly-connected server gets traffic.',
+    },
   },
 
   3: {
@@ -160,6 +179,17 @@ export const LEVEL_CONFIGS = {
     ],
     nodeCosts: { server: 300, loadBalancer: 400, database: 300, cache: 500 },
     activeSimulators: ['traffic', 'loadBalancer', 'cache'],
+    idealSolution: {
+      description: 'Cache layer between servers and database',
+      nodes: [
+        { type: 'trafficSource', label: 'Users', count: 1 },
+        { type: 'loadBalancer', label: 'Load Balancer', count: 1 },
+        { type: 'server', label: 'Web Server', count: 3 },
+        { type: 'cache', label: 'Redis Cache', count: 1 },
+        { type: 'database', label: 'SQL Database', count: 1 },
+      ],
+      explanation: 'A cache absorbs ~80% of read traffic, keeping the database under its 3,000 QPS limit and reducing latency from ~40ms to ~5ms for cached queries.',
+    },
   },
 
   4: {
@@ -220,6 +250,18 @@ export const LEVEL_CONFIGS = {
     ],
     nodeCosts: { server: 400, loadBalancer: 400, database: 500, cache: 500, cdn: 600, region: 0 },
     activeSimulators: ['traffic', 'loadBalancer', 'cache', 'geoLatency'],
+    idealSolution: {
+      description: 'Multi-region with CDN edge caching',
+      nodes: [
+        { type: 'trafficSource', label: 'Users', count: 3 },
+        { type: 'cdn', label: 'CDN', count: 1 },
+        { type: 'loadBalancer', label: 'Load Balancer', count: 1 },
+        { type: 'server', label: 'Server', count: 4 },
+        { type: 'cache', label: 'Cache', count: 1 },
+        { type: 'database', label: 'Database', count: 1 },
+      ],
+      explanation: 'CDN serves static content from edge locations close to each region, reducing cross-region latency. Servers and cache handle dynamic requests.',
+    },
   },
 
   5: {
@@ -275,6 +317,19 @@ export const LEVEL_CONFIGS = {
     ],
     nodeCosts: { server: 400, loadBalancer: 400, database: 500, cache: 500, cdn: 600, replica: 700, healthCheck: 300, region: 0 },
     activeSimulators: ['traffic', 'loadBalancer', 'cache', 'failover'],
+    idealSolution: {
+      description: 'Replicas and health checks for fault tolerance',
+      nodes: [
+        { type: 'trafficSource', label: 'Users', count: 1 },
+        { type: 'loadBalancer', label: 'Load Balancer', count: 1 },
+        { type: 'server', label: 'Server', count: 3 },
+        { type: 'cache', label: 'Cache', count: 1 },
+        { type: 'database', label: 'Primary DB', count: 1 },
+        { type: 'replica', label: 'Replica DB', count: 1 },
+        { type: 'healthCheck', label: 'Health Check', count: 1 },
+      ],
+      explanation: 'A replica takes over when the primary DB fails. Health checks detect the failure and trigger automatic failover, preventing system-wide outage.',
+    },
   },
   6: {
     name: 'The Gatekeeper',
@@ -326,6 +381,18 @@ export const LEVEL_CONFIGS = {
     ],
     nodeCosts: { server: 400, loadBalancer: 400, database: 500, cache: 500, apiGateway: 800 },
     activeSimulators: ['traffic', 'rateLimiter', 'loadBalancer', 'cache'],
+    idealSolution: {
+      description: 'API Gateway for rate limiting and traffic filtering',
+      nodes: [
+        { type: 'trafficSource', label: 'Users', count: 1 },
+        { type: 'apiGateway', label: 'API Gateway', count: 1 },
+        { type: 'loadBalancer', label: 'Load Balancer', count: 1 },
+        { type: 'server', label: 'Server', count: 4 },
+        { type: 'cache', label: 'Cache', count: 1 },
+        { type: 'database', label: 'Database', count: 1 },
+      ],
+      explanation: 'The API Gateway filters malicious traffic and rate-limits requests before they reach your servers, preventing overload from bots and abuse.',
+    },
   },
 
   7: {
@@ -376,6 +443,18 @@ export const LEVEL_CONFIGS = {
     ],
     nodeCosts: { server: 400, loadBalancer: 400, database: 500, cache: 500, messageQueue: 600, worker: 350 },
     activeSimulators: ['traffic', 'loadBalancer', 'queue'],
+    idealSolution: {
+      description: 'Message queue with workers for async processing',
+      nodes: [
+        { type: 'trafficSource', label: 'Users', count: 1 },
+        { type: 'loadBalancer', label: 'Load Balancer', count: 1 },
+        { type: 'server', label: 'Server', count: 3 },
+        { type: 'messageQueue', label: 'Message Queue', count: 1 },
+        { type: 'worker', label: 'Worker', count: 3 },
+        { type: 'database', label: 'Database', count: 1 },
+      ],
+      explanation: 'Servers push heavy tasks to the message queue. Workers process them asynchronously, decoupling request handling from background work.',
+    },
   },
 
   8: {
@@ -420,6 +499,19 @@ export const LEVEL_CONFIGS = {
     ],
     nodeCosts: { server: 300, loadBalancer: 400, database: 500, cache: 500, messageQueue: 600, worker: 350 },
     activeSimulators: ['traffic', 'loadBalancer', 'cache'],
+    idealSolution: {
+      description: 'Microservices with dedicated databases',
+      nodes: [
+        { type: 'trafficSource', label: 'Users', count: 1 },
+        { type: 'apiGateway', label: 'API Gateway', count: 1 },
+        { type: 'loadBalancer', label: 'Load Balancer', count: 2 },
+        { type: 'server', label: 'Service', count: 6 },
+        { type: 'messageQueue', label: 'Message Queue', count: 1 },
+        { type: 'database', label: 'Database', count: 2 },
+        { type: 'cache', label: 'Cache', count: 1 },
+      ],
+      explanation: 'Each microservice owns its data and scales independently. API Gateway routes to the right service. Message queue handles inter-service communication.',
+    },
   },
 
   9: {
@@ -469,6 +561,19 @@ export const LEVEL_CONFIGS = {
     ],
     nodeCosts: { server: 300, loadBalancer: 400, database: 500, cache: 500, autoScaler: 1000 },
     activeSimulators: ['traffic', 'loadBalancer', 'cache', 'autoScaler'],
+    idealSolution: {
+      description: 'Auto-scaler responding to traffic spikes',
+      nodes: [
+        { type: 'trafficSource', label: 'Users', count: 1 },
+        { type: 'loadBalancer', label: 'Load Balancer', count: 1 },
+        { type: 'server', label: 'Server', count: 3 },
+        { type: 'autoScaler', label: 'Auto-Scaler', count: 1 },
+        { type: 'cache', label: 'Cache', count: 1 },
+        { type: 'database', label: 'Database', count: 1 },
+        { type: 'replica', label: 'Replica', count: 1 },
+      ],
+      explanation: 'The auto-scaler monitors load and spins up new servers automatically when traffic exceeds capacity, then scales down when traffic drops.',
+    },
   },
 
   10: {
@@ -525,6 +630,19 @@ export const LEVEL_CONFIGS = {
     ],
     nodeCosts: { server: 400, loadBalancer: 400, database: 500, cache: 500, cdn: 600, replica: 700, healthCheck: 300, circuitBreaker: 800 },
     activeSimulators: ['traffic', 'loadBalancer', 'cache', 'chaos'],
+    idealSolution: {
+      description: 'Circuit breakers isolating failing services',
+      nodes: [
+        { type: 'trafficSource', label: 'Users', count: 1 },
+        { type: 'loadBalancer', label: 'Load Balancer', count: 1 },
+        { type: 'server', label: 'Server', count: 3 },
+        { type: 'circuitBreaker', label: 'Circuit Breaker', count: 1 },
+        { type: 'database', label: 'Database', count: 1 },
+        { type: 'replica', label: 'Replica', count: 1 },
+        { type: 'healthCheck', label: 'Health Check', count: 1 },
+      ],
+      explanation: 'Circuit breakers detect when a downstream service fails and stop sending it traffic, preventing cascading failures across the entire system.',
+    },
   },
 
   // === REAL-WORLD SCENARIOS ===
@@ -575,6 +693,20 @@ export const LEVEL_CONFIGS = {
     ],
     nodeCosts: { server: 400, loadBalancer: 400, database: 500, cache: 500, cdn: 600, messageQueue: 600, worker: 350 },
     activeSimulators: ['traffic', 'loadBalancer', 'cache'],
+    idealSolution: {
+      description: 'Fan-out with timeline caching',
+      nodes: [
+        { type: 'trafficSource', label: 'Users', count: 2 },
+        { type: 'loadBalancer', label: 'Load Balancer', count: 1 },
+        { type: 'server', label: 'Read Server', count: 3 },
+        { type: 'server', label: 'Write Server', count: 1 },
+        { type: 'cache', label: 'Timeline Cache', count: 1 },
+        { type: 'messageQueue', label: 'Fan-Out Queue', count: 1 },
+        { type: 'worker', label: 'Fan-Out Worker', count: 2 },
+        { type: 'database', label: 'Database', count: 1 },
+      ],
+      explanation: 'Pre-compute timelines on write (fan-out-on-write). Cache serves reads instantly. Message queue + workers handle the fan-out asynchronously.',
+    },
   },
 
   12: {
@@ -622,6 +754,19 @@ export const LEVEL_CONFIGS = {
     ],
     nodeCosts: { server: 400, loadBalancer: 400, database: 500, cache: 500, messageQueue: 600, worker: 350, apiGateway: 800 },
     activeSimulators: ['traffic', 'rateLimiter', 'loadBalancer', 'queue'],
+    idealSolution: {
+      description: 'Geo-indexed matching with regional processing',
+      nodes: [
+        { type: 'trafficSource', label: 'Riders', count: 1 },
+        { type: 'trafficSource', label: 'Drivers', count: 1 },
+        { type: 'loadBalancer', label: 'Load Balancer', count: 1 },
+        { type: 'server', label: 'Matching Server', count: 3 },
+        { type: 'cache', label: 'Location Cache', count: 1 },
+        { type: 'messageQueue', label: 'Match Queue', count: 1 },
+        { type: 'database', label: 'Database', count: 1 },
+      ],
+      explanation: 'Cache stores real-time driver locations. Matching servers use geo-indexing to find nearby drivers. Message queue ensures reliable match delivery.',
+    },
   },
 
   13: {
@@ -677,6 +822,18 @@ export const LEVEL_CONFIGS = {
     ],
     nodeCosts: { server: 500, loadBalancer: 400, database: 600, cache: 500, cdn: 700, region: 0, replica: 700 },
     activeSimulators: ['traffic', 'loadBalancer', 'cache', 'geoLatency'],
+    idealSolution: {
+      description: 'Global CDN with edge computing',
+      nodes: [
+        { type: 'trafficSource', label: 'Viewers', count: 3 },
+        { type: 'cdn', label: 'CDN Edge', count: 3 },
+        { type: 'loadBalancer', label: 'Origin LB', count: 1 },
+        { type: 'server', label: 'Origin Server', count: 2 },
+        { type: 'cache', label: 'Metadata Cache', count: 1 },
+        { type: 'database', label: 'Content DB', count: 1 },
+      ],
+      explanation: 'CDN edges cache video segments close to viewers in each region. Origin servers only handle cache misses and metadata. This reduces cross-continent latency.',
+    },
   },
 
   14: {
@@ -720,6 +877,19 @@ export const LEVEL_CONFIGS = {
     ],
     nodeCosts: { server: 400, loadBalancer: 400, database: 500, cache: 500, messageQueue: 600, worker: 350, replica: 700 },
     activeSimulators: ['traffic', 'loadBalancer', 'queue', 'cache'],
+    idealSolution: {
+      description: 'Guaranteed delivery with persistent queues',
+      nodes: [
+        { type: 'trafficSource', label: 'Senders', count: 2 },
+        { type: 'loadBalancer', label: 'Load Balancer', count: 1 },
+        { type: 'server', label: 'Connection Server', count: 3 },
+        { type: 'messageQueue', label: 'Delivery Queue', count: 1 },
+        { type: 'worker', label: 'Delivery Worker', count: 2 },
+        { type: 'database', label: 'Message Store', count: 1 },
+        { type: 'cache', label: 'Presence Cache', count: 1 },
+      ],
+      explanation: 'Messages persist in the queue until acknowledged. If recipient is offline, delivery workers retry from the queue. Presence cache tracks who is online.',
+    },
   },
 
   15: {
@@ -769,6 +939,19 @@ export const LEVEL_CONFIGS = {
     ],
     nodeCosts: { server: 400, loadBalancer: 400, database: 500, cache: 500, messageQueue: 600, worker: 350, replica: 700, healthCheck: 300, circuitBreaker: 800 },
     activeSimulators: ['traffic', 'loadBalancer', 'queue', 'failover'],
+    idealSolution: {
+      description: 'Idempotent processing with exactly-once semantics',
+      nodes: [
+        { type: 'trafficSource', label: 'Merchants', count: 1 },
+        { type: 'apiGateway', label: 'API Gateway', count: 1 },
+        { type: 'server', label: 'Payment Server', count: 3 },
+        { type: 'messageQueue', label: 'Transaction Queue', count: 1 },
+        { type: 'worker', label: 'Settlement Worker', count: 2 },
+        { type: 'database', label: 'Ledger DB', count: 1 },
+        { type: 'cache', label: 'Idempotency Cache', count: 1 },
+      ],
+      explanation: 'API Gateway assigns idempotency keys. Payment servers check the cache before processing. Queue ensures settlement happens exactly once, even on retries.',
+    },
   },
 };
 

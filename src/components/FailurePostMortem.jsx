@@ -1,5 +1,7 @@
-import { AlertTriangle, TrendingDown, Server, Zap, ArrowRight, Shield, Database, Globe, Layers } from 'lucide-react';
+import { AlertTriangle, TrendingDown, Server, Zap, ArrowRight, Shield, Database, Globe, Layers, ChevronDown, ChevronUp, Split, DatabaseZap, HeartPulse, Cog, TrendingUp, ShieldOff, Lightbulb } from 'lucide-react';
+import { useState } from 'react';
 import useGameStore from '../store/useGameStore';
+import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
 
 // --- Analysis helpers ---
 
@@ -246,10 +248,29 @@ const chainNodeStyle = (isOverloaded) => ({
   whiteSpace: 'nowrap',
 });
 
+const IDEAL_ICONS = {
+  trafficSource: { icon: Globe, color: 'var(--node-traffic)' },
+  server: { icon: Server, color: 'var(--node-server)' },
+  database: { icon: Database, color: 'var(--node-database)' },
+  loadBalancer: { icon: Split, color: 'var(--node-loadbalancer)' },
+  cache: { icon: Zap, color: 'var(--node-cache)' },
+  cdn: { icon: Globe, color: 'var(--node-cdn)' },
+  replica: { icon: DatabaseZap, color: 'var(--node-replica)' },
+  healthCheck: { icon: HeartPulse, color: 'var(--node-healthcheck)' },
+  apiGateway: { icon: Shield, color: 'var(--node-apigateway)' },
+  messageQueue: { icon: Layers, color: 'var(--node-messagequeue)' },
+  worker: { icon: Cog, color: 'var(--node-worker)' },
+  autoScaler: { icon: TrendingUp, color: 'var(--node-autoscaler)' },
+  circuitBreaker: { icon: ShieldOff, color: 'var(--node-circuitbreaker)' },
+};
+
 // --- Component ---
 
 export default function FailurePostMortem() {
   const { nodes, edges, metrics, rps, latency } = useGameStore();
+  const [showIdeal, setShowIdeal] = useState(false);
+  const level = useGameStore((s) => s.level);
+  const idealSolution = LEVEL_CONFIGS[level]?.idealSolution;
 
   const bottlenecks = findBottlenecks(nodes, metrics);
   const chains = buildFailureChain(nodes, edges, bottlenecks);
@@ -413,6 +434,70 @@ export default function FailurePostMortem() {
           ))}
         </div>
       </div>
+
+      {/* Ideal Solution */}
+      {idealSolution && (
+        <div style={sectionStyle}>
+          <button
+            onClick={() => setShowIdeal(prev => !prev)}
+            style={{
+              ...sectionTitleStyle,
+              background: 'none', border: 'none', cursor: 'pointer',
+              padding: 0, width: '100%', justifyContent: 'space-between',
+            }}
+          >
+            <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <Lightbulb size={13} style={{ color: 'var(--text-accent)' }} />
+              <span>Ideal Architecture</span>
+            </span>
+            {showIdeal ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+
+          {showIdeal && (
+            <div style={{ marginTop: 8 }}>
+              <div style={{
+                fontSize: 12, fontWeight: 600, color: 'var(--text-accent)',
+                marginBottom: 10, fontFamily: "'JetBrains Mono', monospace",
+              }}>
+                {idealSolution.description}
+              </div>
+
+              <div style={{
+                display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center',
+                padding: '12px 14px', background: 'var(--bg-primary)', borderRadius: 8,
+                marginBottom: 10,
+              }}>
+                {idealSolution.nodes.map((node, i) => {
+                  const def = IDEAL_ICONS[node.type] || { icon: Server, color: 'var(--text-muted)' };
+                  const NodeIcon = def.icon;
+                  return (
+                    <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                      {i > 0 && <ArrowRight size={10} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />}
+                      <span style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 4,
+                        padding: '4px 8px', background: `${def.color}15`,
+                        border: `1px solid ${def.color}30`, borderRadius: 6,
+                      }}>
+                        <NodeIcon size={12} style={{ color: def.color }} />
+                        <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-primary)' }}>
+                          {node.label}{node.count > 1 ? ` x${node.count}` : ''}
+                        </span>
+                      </span>
+                    </span>
+                  );
+                })}
+              </div>
+
+              <p style={{
+                margin: 0, fontSize: 12, lineHeight: 1.6,
+                color: 'var(--text-secondary)',
+              }}>
+                {idealSolution.explanation}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
