@@ -37,9 +37,10 @@ System Design Sim is an interactive, visual system design simulator. Instead of 
 
 - **15 levels** — from "what's a server?" to designing Netflix's CDN
 - **5 real-world scenarios** — modeled after Twitter, Uber, Netflix, WhatsApp, Stripe
-- **8 interactive concept playgrounds** — CAP theorem, consistent hashing, sharding, and more
-- **Architecture grading** — S/A/B/C/D/F scores on cost, latency, resilience, simplicity
-- **Failure post-mortems** — bottleneck analysis, cascade visualization, smart fix suggestions
+- **15 interactive concept playgrounds** — CAP theorem, consistent hashing, Raft consensus, ACID transactions, and more
+- **Architecture grading** — S/A/B/C/D/F scores with radar chart visualization on cost, latency, resilience, simplicity
+- **Failure post-mortems** — bottleneck analysis, cascade visualization, smart fix suggestions, ideal solution comparison
+- **Mobile responsive** — adapts layout for tablet and phone with collapsible component tray
 - **Sandbox mode** — unlimited budget, all components, no objectives
 - **Export as PNG** — download your architecture diagram as a shareable image
 - **Synthesized sound effects & music** — all generated via Web Audio API, zero audio files
@@ -83,7 +84,7 @@ System Design Sim is an interactive, visual system design simulator. Instead of 
 
 ## Concept Library
 
-Click the **"Learn"** button in the toolbar to access 8 interactive system design playgrounds:
+Click the **"Learn"** button in the toolbar to access 15 interactive system design playgrounds:
 
 | Concept | What You Can Do |
 |---------|----------------|
@@ -95,6 +96,13 @@ Click the **"Learn"** button in the toolbar to access 8 interactive system desig
 | **Replication** | Toggle leader-follower / multi-leader / leaderless, kill the leader, watch failover |
 | **Message Queues** | Send messages through point-to-point / pub-sub / fan-out, watch delivery patterns |
 | **Rate Limiting** | Test token bucket / sliding window / fixed window with burst and steady stream |
+| **Event Sourcing** | Replay events forward/backward on a timeline, watch aggregate state rebuild |
+| **TCP vs UDP** | Send packets over both protocols — compare reliability, speed, and packet loss |
+| **Circuit Breakers** | Trip the breaker on failures, watch requests get blocked to prevent cascading outages |
+| **DNS & Service Discovery** | Trace the DNS resolution chain from browser to authoritative nameserver with caching |
+| **ACID Transactions** | Run concurrent transactions at different isolation levels, spot dirty reads and lost updates |
+| **Raft Consensus** | Kill the leader, watch elections, replicate log entries across a 5-node cluster |
+| **Back Pressure** | Adjust producer/consumer rates, compare drop-tail, drop-head, and block-producer strategies |
 
 ---
 
@@ -225,7 +233,8 @@ src/
 │   ├── SustainBar.jsx           # Win condition progress bar
 │   ├── AnimatedEdge.jsx         # Flowing dot edge animation
 │   ├── LevelIntro.jsx           # Level briefing modal
-│   ├── WinScreen.jsx            # Victory screen + grade card + references
+│   ├── RadarChart.jsx            # SVG radar chart for architecture grading
+│   ├── WinScreen.jsx            # Victory screen + radar grade card + references
 │   ├── FailScreen.jsx           # Failure screen + post-mortem analysis
 │   ├── FailurePostMortem.jsx    # Bottleneck analysis, failure chain, suggestions
 │   ├── LevelSelect.jsx          # Level selection + sandbox mode
@@ -243,7 +252,14 @@ src/
 │       ├── CachingStrategies.jsx
 │       ├── Replication.jsx
 │       ├── MessageQueuePatterns.jsx
-│       └── RateLimiting.jsx
+│       ├── RateLimiting.jsx
+│       ├── EventSourcing.jsx
+│       ├── TcpVsUdp.jsx
+│       ├── CircuitBreakers.jsx
+│       ├── DNSDiscovery.jsx
+│       ├── ACIDTransactions.jsx
+│       ├── RaftConsensus.jsx
+│       └── BackPressure.jsx
 └── styles/
     └── theme.css                # CSS variables, animations, node styles
 ```
@@ -264,7 +280,6 @@ src/
 
 Contributions are welcome! Here are some ideas:
 
-- Mobile responsiveness and touch-friendly interactions
 - Accessibility improvements (screen reader labels, keyboard navigation, high contrast)
 - Write tests (no test framework configured yet)
 - Add more levels beyond 15
