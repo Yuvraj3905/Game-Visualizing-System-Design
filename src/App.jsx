@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import ReactFlow, {
   addEdge,
   Background,
@@ -91,6 +91,13 @@ export default function App() {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const reactFlowWrapper = useRef(null);
   const initialized = useRef(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   const lastOverloaded = useRef(0);
   const overloadCooldown = useRef(0);
 
@@ -201,7 +208,7 @@ export default function App() {
         <div
           data-tour="canvas"
           ref={reactFlowWrapper}
-          style={{ flex: 1, position: 'relative' }}
+          style={{ flex: 1, position: 'relative', paddingBottom: isMobile ? 56 : 0 }}
           onDragOver={onDragOver}
           onDrop={onDrop}
         >

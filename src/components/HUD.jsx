@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { DollarSign, Activity, Clock, Heart, Users, RotateCcw, List, HelpCircle, Volume2, VolumeX, BookOpen } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
@@ -36,8 +37,16 @@ function StatCard({ icon, label, value, unit, color, animate, tooltip, compact }
 export default function HUD() {
   const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute, sandboxMode, setShowConceptLibrary } = useGameStore();
   const config = LEVEL_CONFIGS[level] || LEVEL_CONFIGS[0];
-  const isCompact = window.innerWidth <= 768;
-  const isPhone = window.innerWidth <= 480;
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isCompact = windowWidth <= 768;
+  const isPhone = windowWidth <= 480;
 
   const latencyColor = latency > 200 ? 'var(--color-critical)' : latency > 100 ? 'var(--color-warning)' : 'var(--color-healthy)';
   const healthColor = metrics.healthPercent > 70 ? 'var(--color-healthy)' : metrics.healthPercent > 30 ? 'var(--color-warning)' : 'var(--color-critical)';
@@ -66,7 +75,7 @@ export default function HUD() {
         </div>
       )}
 
-      <div data-tour="hud-stats" style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+      <div data-tour="hud-stats" style={{ display: 'flex', gap: isPhone ? 4 : 8, flexWrap: 'wrap', justifyContent: 'center', flex: 1, minWidth: 0 }}>
         <StatCard
           icon={DollarSign} label="Budget" value={`$${money.toLocaleString()}`}
           color={budgetShake ? 'var(--color-critical)' : 'var(--color-healthy)'}
@@ -102,15 +111,15 @@ export default function HUD() {
         )}
       </div>
 
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+      <div style={{ display: 'flex', gap: isPhone ? 4 : 8, alignItems: 'center', flexShrink: 0 }}>
         {gameStatus === 'playing' && (
           <Tooltip text="Manually spike traffic by 25% to stress-test your system" position="bottom">
             <button
               data-tour="spike-traffic"
               onClick={() => { setTargetTraffic(Math.min(targetRps + Math.round(config.targetTraffic / 4), config.targetTraffic)); Sound.playSpikeTraffic(); }}
               style={{
-                padding: '8px 16px', background: 'var(--bg-primary)', color: 'var(--text-primary)',
-                border: '1px solid var(--border-primary)', borderRadius: 10, fontWeight: 700, fontSize: 13,
+                padding: isPhone ? '6px 10px' : '8px 16px', background: 'var(--bg-primary)', color: 'var(--text-primary)',
+                border: '1px solid var(--border-primary)', borderRadius: 10, fontWeight: 700, fontSize: isPhone ? 11 : 13,
                 cursor: 'pointer', transition: 'all 150ms',
               }}
             >
@@ -134,9 +143,9 @@ export default function HUD() {
           <button
             onClick={toggleLevelSelect}
             style={{
-              padding: '8px 12px', background: 'var(--bg-tertiary)', color: 'var(--text-secondary)',
-              border: '1px solid var(--border-primary)', borderRadius: 10, fontSize: 13,
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+              padding: isPhone ? '6px 8px' : '8px 12px', background: 'var(--bg-tertiary)', color: 'var(--text-secondary)',
+              border: '1px solid var(--border-primary)', borderRadius: 10, fontSize: isPhone ? 11 : 13,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: isPhone ? 4 : 6,
             }}
           >
             <List size={14} />{!isCompact && ' Levels'}
@@ -146,43 +155,47 @@ export default function HUD() {
           <button
             onClick={() => setShowConceptLibrary(true)}
             style={{
-              padding: '8px 12px', background: 'var(--bg-tertiary)', color: 'var(--text-secondary)',
-              border: '1px solid var(--border-primary)', borderRadius: 10, fontSize: 13,
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+              padding: isPhone ? '6px 8px' : '8px 12px', background: 'var(--bg-tertiary)', color: 'var(--text-secondary)',
+              border: '1px solid var(--border-primary)', borderRadius: 10, fontSize: isPhone ? 11 : 13,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: isPhone ? 4 : 6,
             }}
           >
             <BookOpen size={14} />{!isCompact && ' Learn'}
           </button>
         </Tooltip>
-        <ExportButton />
-        <Tooltip text="Take a guided tour of the interface" position="bottom">
-          <button
-            onClick={() => setShowTour(true)}
-            style={{
-              width: 36, height: 36, borderRadius: '50%',
-              background: 'var(--bg-tertiary)', border: '1px solid var(--border-primary)',
-              color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', flexShrink: 0,
-            }}
-          >
-            <HelpCircle size={16} />
-          </button>
-        </Tooltip>
-        <Tooltip text={audioMuted ? 'Unmute sounds' : 'Mute sounds'} position="bottom">
-          <button
-            onClick={toggleAudioMute}
-            style={{
-              width: 36, height: 36, borderRadius: '50%',
-              background: audioMuted ? 'var(--color-critical-bg)' : 'var(--bg-tertiary)',
-              border: `1px solid ${audioMuted ? 'var(--color-critical)' : 'var(--border-primary)'}`,
-              color: audioMuted ? 'var(--color-critical)' : 'var(--text-muted)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', flexShrink: 0,
-            }}
-          >
-            {audioMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-          </button>
-        </Tooltip>
+        {!isPhone && <ExportButton />}
+        {!isPhone && (
+          <Tooltip text="Take a guided tour of the interface" position="bottom">
+            <button
+              onClick={() => setShowTour(true)}
+              style={{
+                width: 36, height: 36, borderRadius: '50%',
+                background: 'var(--bg-tertiary)', border: '1px solid var(--border-primary)',
+                color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', flexShrink: 0,
+              }}
+            >
+              <HelpCircle size={16} />
+            </button>
+          </Tooltip>
+        )}
+        {!isPhone && (
+          <Tooltip text={audioMuted ? 'Unmute sounds' : 'Mute sounds'} position="bottom">
+            <button
+              onClick={toggleAudioMute}
+              style={{
+                width: 36, height: 36, borderRadius: '50%',
+                background: audioMuted ? 'var(--color-critical-bg)' : 'var(--bg-tertiary)',
+                border: `1px solid ${audioMuted ? 'var(--color-critical)' : 'var(--border-primary)'}`,
+                color: audioMuted ? 'var(--color-critical)' : 'var(--text-muted)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', flexShrink: 0,
+              }}
+            >
+              {audioMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+            </button>
+          </Tooltip>
+        )}
       </div>
     </div>
   );
