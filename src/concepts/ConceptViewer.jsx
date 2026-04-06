@@ -10,6 +10,13 @@ import CachingStrategies from './concepts/CachingStrategies';
 import Replication from './concepts/Replication';
 import MessageQueuePatterns from './concepts/MessageQueuePatterns';
 import RateLimiting from './concepts/RateLimiting';
+import EventSourcing from './concepts/EventSourcing';
+import TcpVsUdp from './concepts/TcpVsUdp';
+import CircuitBreakers from './concepts/CircuitBreakers';
+import DNSDiscovery from './concepts/DNSDiscovery';
+import ACIDTransactions from './concepts/ACIDTransactions';
+import RaftConsensus from './concepts/RaftConsensus';
+import BackPressure from './concepts/BackPressure';
 
 const COMPONENTS = {
   'cap-theorem': CAPTheorem,
@@ -20,6 +27,13 @@ const COMPONENTS = {
   'replication': Replication,
   'message-queues': MessageQueuePatterns,
   'rate-limiting': RateLimiting,
+  'event-sourcing': EventSourcing,
+  'tcp-vs-udp': TcpVsUdp,
+  'circuit-breakers': CircuitBreakers,
+  'dns-discovery': DNSDiscovery,
+  'acid-transactions': ACIDTransactions,
+  'raft-consensus': RaftConsensus,
+  'back-pressure': BackPressure,
 };
 
 const TITLES = {
@@ -31,6 +45,13 @@ const TITLES = {
   'replication': 'Replication',
   'message-queues': 'Message Queues',
   'rate-limiting': 'Rate Limiting',
+  'event-sourcing': 'Event Sourcing',
+  'tcp-vs-udp': 'TCP vs UDP',
+  'circuit-breakers': 'Circuit Breakers',
+  'dns-discovery': 'DNS & Service Discovery',
+  'acid-transactions': 'ACID Transactions',
+  'raft-consensus': 'Raft Consensus',
+  'back-pressure': 'Back Pressure',
 };
 
 export default function ConceptViewer() {

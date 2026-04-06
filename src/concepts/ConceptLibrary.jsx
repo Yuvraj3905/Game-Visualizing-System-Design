@@ -1,4 +1,4 @@
-import { BookOpen, X, Triangle, Circle, Database, Split, Zap, DatabaseZap, Layers, Shield } from 'lucide-react';
+import { BookOpen, X, Triangle, Circle, Database, Split, Zap, DatabaseZap, Layers, Shield, Rewind, Wifi, ShieldOff, Search, Lock, GitBranch, Gauge } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 
 const CONCEPTS = [
@@ -10,6 +10,13 @@ const CONCEPTS = [
   { id: 'replication', title: 'Replication', icon: DatabaseZap, color: '#8b5cf6', difficulty: 'Advanced', description: 'Explore leader-follower, multi-leader, and leaderless replication' },
   { id: 'message-queues', title: 'Message Queues', icon: Layers, color: '#14b8a6', difficulty: 'Intermediate', description: 'See point-to-point, pub/sub, and fan-out patterns in action' },
   { id: 'rate-limiting', title: 'Rate Limiting', icon: Shield, color: '#f43f5e', difficulty: 'Advanced', description: 'Compare Token Bucket, Sliding Window, and Fixed Window algorithms' },
+  { id: 'event-sourcing', title: 'Event Sourcing', icon: Rewind, color: '#f97316', difficulty: 'Advanced', description: 'Replay events forward and backward to rebuild aggregate state from an event log' },
+  { id: 'tcp-vs-udp', title: 'TCP vs UDP', icon: Wifi, color: '#06b6d4', difficulty: 'Beginner', description: 'Send packets over TCP and UDP — compare reliability, speed, and packet loss' },
+  { id: 'circuit-breakers', title: 'Circuit Breakers', icon: ShieldOff, color: '#ef4444', difficulty: 'Intermediate', description: 'Trip the breaker on failures and watch requests get blocked to prevent cascading outages' },
+  { id: 'dns-discovery', title: 'DNS & Service Discovery', icon: Search, color: '#3b82f6', difficulty: 'Beginner', description: 'Trace the DNS resolution chain from browser to authoritative nameserver' },
+  { id: 'acid-transactions', title: 'ACID Transactions', icon: Lock, color: '#a855f7', difficulty: 'Intermediate', description: 'Run concurrent transactions at different isolation levels and spot anomalies' },
+  { id: 'raft-consensus', title: 'Raft Consensus', icon: GitBranch, color: '#22c55e', difficulty: 'Advanced', description: 'Kill the leader, watch elections, and replicate log entries across a 5-node cluster' },
+  { id: 'back-pressure', title: 'Back Pressure', icon: Gauge, color: '#f59e0b', difficulty: 'Intermediate', description: 'Adjust producer and consumer rates — compare drop-tail, drop-head, and block strategies' },
 ];
 
 const DIFFICULTY_COLORS = {
