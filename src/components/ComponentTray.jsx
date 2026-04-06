@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Server, Database, Split, Zap, Globe, MapPin, DatabaseZap, HeartPulse, Lock, Shield, Layers, Cog, TrendingUp, ShieldOff } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
@@ -41,6 +42,13 @@ export default function ComponentTray() {
   const { level, money, addNode, gameStatus, sandboxMode } = useGameStore();
   const config = LEVEL_CONFIGS[level] || LEVEL_CONFIGS[0];
   const unlocked = sandboxMode ? ALL_COMPONENTS : (config.unlockedComponents || []);
+  const [collapsed, setCollapsed] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setCollapsed(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const onDragStart = (event, type) => {
     event.dataTransfer.setData('application/reactflow', type);
@@ -50,7 +58,22 @@ export default function ComponentTray() {
   return (
     <div
       data-tour="component-tray"
-      style={{
+      style={collapsed ? {
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 20,
+        background: 'var(--bg-secondary)',
+        borderTop: '1px solid var(--border-primary)',
+        padding: '8px 12px',
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 6,
+        overflowX: 'auto',
+        overflowY: 'hidden',
+        flexShrink: 0,
+      } : {
         width: 180,
         background: 'var(--bg-secondary)',
         borderRight: '1px solid var(--border-primary)',
@@ -65,9 +88,11 @@ export default function ComponentTray() {
         WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
       }}
     >
-      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.15em', marginBottom: 4 }}>
-        Components
-      </div>
+      {!collapsed && (
+        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.15em', marginBottom: 4 }}>
+          Components
+        </div>
+      )}
 
       {ALL_COMPONENTS.map(type => {
         const def = COMPONENT_DEFS[type];
@@ -78,12 +103,20 @@ export default function ComponentTray() {
         const isDisabled = !isUnlocked || !canAfford || gameStatus !== 'playing';
 
         return (
-          <Tooltip key={type} text={isUnlocked ? COMPONENT_TOOLTIPS[type] : 'Locked — complete earlier levels to unlock'} position="right">
+          <Tooltip key={type} text={isUnlocked ? COMPONENT_TOOLTIPS[type] : 'Locked — complete earlier levels to unlock'} position={collapsed ? 'top' : 'right'}>
             <div
               draggable={!isDisabled}
               onDragStart={(e) => !isDisabled && onDragStart(e, type)}
               onClick={() => !isDisabled && addNode(type)}
-              style={{
+              style={collapsed ? {
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
+                padding: '8px 10px', borderRadius: 8, flexShrink: 0,
+                background: isUnlocked ? 'var(--bg-tertiary)' : 'var(--bg-primary)',
+                border: `1px solid ${isUnlocked ? 'var(--border-primary)' : 'transparent'}`,
+                cursor: isDisabled ? 'not-allowed' : 'grab',
+                opacity: isDisabled ? 0.4 : 1,
+                transition: 'all 150ms',
+              } : {
                 display: 'flex', alignItems: 'center', gap: 10,
                 padding: '10px 12px', borderRadius: 10,
                 background: isUnlocked ? 'var(--bg-tertiary)' : 'var(--bg-primary)',
@@ -106,16 +139,18 @@ export default function ComponentTray() {
                   <Lock size={14} style={{ color: 'var(--text-muted)' }} />
                 )}
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: 12, fontWeight: 600, color: isUnlocked ? 'var(--text-primary)' : 'var(--text-muted)' }}>
-                  {def.label}
-                </span>
-                {isUnlocked && cost > 0 && (
-                  <span style={{ fontSize: 10, color: canAfford ? 'var(--color-healthy)' : 'var(--color-critical)', fontFamily: "'JetBrains Mono', monospace" }}>
-                    ${cost}
+              {!collapsed && (
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: isUnlocked ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                    {def.label}
                   </span>
-                )}
-              </div>
+                  {isUnlocked && cost > 0 && (
+                    <span style={{ fontSize: 10, color: canAfford ? 'var(--color-healthy)' : 'var(--color-critical)', fontFamily: "'JetBrains Mono', monospace" }}>
+                      ${cost}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           </Tooltip>
         );
