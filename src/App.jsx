@@ -41,6 +41,7 @@ import DevPanel from './components/DevPanel';
 import SandboxBanner from './components/SandboxMode';
 import ConceptLibrary from './concepts/ConceptLibrary';
 import ConceptViewer from './concepts/ConceptViewer';
+import DailyChallengeModal from './components/DailyChallengeModal';
 import * as Sound from './audio/SoundEngine';
 
 const isDevMode = new URLSearchParams(window.location.search).get('dev') === 'true';
@@ -262,6 +263,7 @@ export default function App() {
       <GuidedTour />
       <SandboxBanner />
       <ConceptLibrary />
+      <DailyChallengeModal />
       <ConceptViewer />
       {isDevMode && <DevPanel />}
     </div>

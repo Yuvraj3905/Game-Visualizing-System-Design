@@ -1,4 +1,4 @@
-import { Trophy, ArrowRight, RotateCcw, ExternalLink } from 'lucide-react';
+import { Trophy, ArrowRight, RotateCcw, ExternalLink, Flame, ArrowLeft } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS, TOTAL_LEVELS } from '../engine/LevelConfigs';
 import RadarChart from './RadarChart';
@@ -17,7 +17,7 @@ const GRADE_COLORS = {
 
 
 export default function WinScreen() {
-  const { level, gameStatus, loadLevel, grade } = useGameStore();
+  const { level, gameStatus, loadLevel, grade, dailyMode, dailyStreak, exitDailyChallenge } = useGameStore();
 
   if (gameStatus !== 'won') return null;
 
@@ -63,11 +63,25 @@ export default function WinScreen() {
         </div>
 
         <h2 style={{ margin: '0 0 4px', fontSize: 24, fontWeight: 800, color: 'var(--color-healthy)' }}>
-          Mission Complete!
+          {dailyMode ? 'Daily Challenge Complete!' : 'Mission Complete!'}
         </h2>
-        <p style={{ margin: '0 0 20px', fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+        <p style={{ margin: '0 0 4px', fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
           Level {level} — {config.name}
         </p>
+        {dailyMode && dailyStreak > 0 && (
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 5,
+            padding: '4px 12px', background: 'rgba(245, 158, 11, 0.1)',
+            border: '1px solid var(--color-warning)', borderRadius: 16,
+            marginBottom: 12,
+          }}>
+            <Flame size={13} style={{ color: 'var(--color-warning)' }} />
+            <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-warning)', fontFamily: "'JetBrains Mono', monospace" }}>
+              {dailyStreak} day streak
+            </span>
+          </div>
+        )}
+        {!dailyMode && <div style={{ marginBottom: 16 }} />}
 
         {/* Grade Card */}
         {grade && (
@@ -135,32 +149,47 @@ export default function WinScreen() {
         </div>
 
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-          <button
-            onClick={() => loadLevel(level)}
-            style={{
-              padding: '10px 20px', background: 'var(--bg-tertiary)', color: 'var(--text-secondary)',
-              border: '1px solid var(--border-primary)', borderRadius: 10, fontWeight: 600, fontSize: 14,
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-            }}
-          >
-            <RotateCcw size={14} /> Replay
-          </button>
-          {hasNextLevel && (
+          {dailyMode ? (
             <button
-              onClick={() => loadLevel(level + 1)}
+              onClick={exitDailyChallenge}
               style={{
                 padding: '10px 24px', background: 'var(--text-accent)', color: 'var(--bg-primary)',
                 border: 'none', borderRadius: 10, fontWeight: 700, fontSize: 14,
                 cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
               }}
             >
-              Next Level <ArrowRight size={16} />
+              <ArrowLeft size={14} /> Back to Menu
             </button>
-          )}
-          {!hasNextLevel && (
-            <div style={{ padding: '10px 24px', background: 'var(--color-healthy-bg)', color: 'var(--color-healthy)', borderRadius: 10, fontWeight: 700, fontSize: 14 }}>
-              You mastered System Design!
-            </div>
+          ) : (
+            <>
+              <button
+                onClick={() => loadLevel(level)}
+                style={{
+                  padding: '10px 20px', background: 'var(--bg-tertiary)', color: 'var(--text-secondary)',
+                  border: '1px solid var(--border-primary)', borderRadius: 10, fontWeight: 600, fontSize: 14,
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                }}
+              >
+                <RotateCcw size={14} /> Replay
+              </button>
+              {hasNextLevel && (
+                <button
+                  onClick={() => loadLevel(level + 1)}
+                  style={{
+                    padding: '10px 24px', background: 'var(--text-accent)', color: 'var(--bg-primary)',
+                    border: 'none', borderRadius: 10, fontWeight: 700, fontSize: 14,
+                    cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                  }}
+                >
+                  Next Level <ArrowRight size={16} />
+                </button>
+              )}
+              {!hasNextLevel && (
+                <div style={{ padding: '10px 24px', background: 'var(--color-healthy-bg)', color: 'var(--color-healthy)', borderRadius: 10, fontWeight: 700, fontSize: 14 }}>
+                  You mastered System Design!
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

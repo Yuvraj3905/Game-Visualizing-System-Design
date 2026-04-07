@@ -41,6 +41,7 @@ System Design Sim is an interactive, visual system design simulator. Instead of 
 - **Architecture grading** — S/A/B/C/D/F scores with radar chart visualization on cost, latency, resilience, simplicity
 - **Failure post-mortems** — bottleneck analysis, cascade visualization, smart fix suggestions, ideal solution comparison
 - **Mobile responsive** — adapts layout for tablet and phone with collapsible component tray
+- **Daily Challenge** — same level for all players each day, streak tracking, 7-day history
 - **Sandbox mode** — unlimited budget, all components, no objectives
 - **Export as PNG** — download your architecture diagram as a shareable image
 - **Synthesized sound effects & music** — all generated via Web Audio API, zero audio files
@@ -197,6 +198,7 @@ src/
 │   ├── TopologyWalker.js        # Graph traversal for traffic distribution
 │   ├── ObjectiveChecklist.js    # Per-level win condition checklists
 │   ├── ArchitectureGrader.js    # Post-win grading (cost/latency/resilience/simplicity)
+│   ├── DailyChallenge.js       # Daily challenge logic, localStorage, streak tracking
 │   └── simulators/
 │       ├── TrafficSimulator.js
 │       ├── LoadBalancerSimulator.js
@@ -233,6 +235,8 @@ src/
 │   ├── SustainBar.jsx           # Win condition progress bar
 │   ├── AnimatedEdge.jsx         # Flowing dot edge animation
 │   ├── LevelIntro.jsx           # Level briefing modal
+│   ├── DailyChallengeButton.jsx  # HUD button with streak badge
+│   ├── DailyChallengeModal.jsx  # Daily challenge info, start, results, history
 │   ├── RadarChart.jsx            # SVG radar chart for architecture grading
 │   ├── WinScreen.jsx            # Victory screen + radar grade card + references
 │   ├── FailScreen.jsx           # Failure screen + post-mortem analysis

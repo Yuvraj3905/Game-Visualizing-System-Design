@@ -5,6 +5,7 @@ import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
 import Tooltip from './Tooltip';
 import * as Sound from '../audio/SoundEngine';
 import ExportButton from './ExportButton';
+import DailyChallengeButton from './DailyChallengeButton';
 
 function StatCard({ icon, label, value, unit, color, animate, tooltip, compact }) {
   const Icon = icon;
@@ -35,7 +36,7 @@ function StatCard({ icon, label, value, unit, color, animate, tooltip, compact }
 }
 
 export default function HUD() {
-  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute, sandboxMode, setShowConceptLibrary } = useGameStore();
+  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute, sandboxMode, setShowConceptLibrary, dailyMode } = useGameStore();
   const config = LEVEL_CONFIGS[level] || LEVEL_CONFIGS[0];
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -70,7 +71,7 @@ export default function HUD() {
             System Design <span style={{ color: 'var(--text-accent)' }}>Sim</span>
           </h1>
           <p style={{ margin: 0, fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 600 }}>
-            {sandboxMode ? 'Sandbox — Freeplay' : `Level ${level} — ${config.name}`}
+            {dailyMode ? 'Daily Challenge' : sandboxMode ? 'Sandbox — Freeplay' : `Level ${level} — ${config.name}`}
           </p>
         </div>
       )}
@@ -139,6 +140,7 @@ export default function HUD() {
             <RotateCcw size={14} /> Retry
           </button>
         )}
+        <DailyChallengeButton isCompact={isCompact} isPhone={isPhone} />
         <Tooltip text="Browse and select levels" position="bottom">
           <button
             onClick={toggleLevelSelect}

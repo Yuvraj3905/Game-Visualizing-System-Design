@@ -3,6 +3,7 @@ import { LEVEL_CONFIGS, TOTAL_LEVELS } from '../engine/LevelConfigs.js';
 import { runTick } from '../engine/LevelOrchestrator.js';
 import * as Sound from '../audio/SoundEngine.js';
 import { gradeArchitecture } from '../engine/ArchitectureGrader.js';
+import { getDailyLevel, loadDailyResult, saveDailyResult as saveDailyToStorage, getStreak } from '../engine/DailyChallenge.js';
 
 // Restore saved progress from localStorage
 function loadProgress() {
@@ -39,6 +40,13 @@ const useGameStore = create((set, get) => ({
   sandboxMode: false,
   showConceptLibrary: false,
   activeConceptId: null,
+
+  // Daily challenge
+  dailyMode: false,
+  dailyCompleted: false,
+  dailyGrade: null,
+  dailyStreak: getStreak().count,
+  showDailyModal: false,
 
   // Game state
   money: LEVEL_CONFIGS[1].budget,
@@ -227,19 +235,34 @@ const useGameStore = create((set, get) => ({
   },
 
   onWin: () => {
-    const { level, tickInterval } = get();
+    const { level, tickInterval, dailyMode } = get();
     if (tickInterval) clearInterval(tickInterval);
-    const newUnlocked = Math.min(level + 1, TOTAL_LEVELS);
-    const finalUnlocked = Math.max(get().unlockedLevel, newUnlocked);
     const grade = gradeArchitecture(get());
-    saveProgress(level, finalUnlocked);
-    set({
-      simulationRunning: false,
-      tickInterval: null,
-      gameStatus: 'won',
-      unlockedLevel: finalUnlocked,
-      grade,
-    });
+
+    if (dailyMode) {
+      saveDailyToStorage(level, grade);
+      const streak = getStreak();
+      set({
+        simulationRunning: false,
+        tickInterval: null,
+        gameStatus: 'won',
+        grade,
+        dailyCompleted: true,
+        dailyGrade: grade,
+        dailyStreak: streak.count,
+      });
+    } else {
+      const newUnlocked = Math.min(level + 1, TOTAL_LEVELS);
+      const finalUnlocked = Math.max(get().unlockedLevel, newUnlocked);
+      saveProgress(level, finalUnlocked);
+      set({
+        simulationRunning: false,
+        tickInterval: null,
+        gameStatus: 'won',
+        unlockedLevel: finalUnlocked,
+        grade,
+      });
+    }
     Sound.stopMusic();
     Sound.playSuccess();
   },
@@ -303,6 +326,26 @@ const useGameStore = create((set, get) => ({
   setShowConceptLibrary: (val) => set({ showConceptLibrary: val, activeConceptId: null }),
   setActiveConcept: (id) => set({ activeConceptId: id }),
   closeConceptLibrary: () => set({ showConceptLibrary: false, activeConceptId: null }),
+
+  // Daily challenge actions
+  toggleDailyModal: () => set(state => ({ showDailyModal: !state.showDailyModal })),
+
+  loadDailyChallenge: () => {
+    const existing = loadDailyResult();
+    if (existing) {
+      set({ dailyCompleted: true, dailyGrade: existing.grade, dailyStreak: getStreak().count, showDailyModal: false });
+      return;
+    }
+    const dailyLevel = getDailyLevel();
+    get().loadLevel(dailyLevel);
+    set({ dailyMode: true, dailyCompleted: false, dailyGrade: null, showDailyModal: false });
+  },
+
+  exitDailyChallenge: () => {
+    const { unlockedLevel } = get();
+    set({ dailyMode: false, dailyCompleted: false, dailyGrade: null });
+    get().loadLevel(unlockedLevel);
+  },
 
   toggleAudioMute: () => {
     const muted = Sound.toggleMute();
