@@ -3,11 +3,11 @@ import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
 
 export default function LevelIntro() {
-  const { level, gameStatus, dismissIntro } = useGameStore();
+  const { level, gameStatus, dismissIntro, configOverride, interviewMode } = useGameStore();
 
   if (gameStatus !== 'intro') return null;
 
-  const config = LEVEL_CONFIGS[level];
+  const config = configOverride || LEVEL_CONFIGS[level];
   const { narrative } = config;
 
   return (
@@ -19,15 +19,15 @@ export default function LevelIntro() {
     }}>
       <div className="animate-slide-up" style={{
         background: 'var(--bg-secondary)',
-        border: '1px solid var(--border-primary)',
+        border: `1px solid ${interviewMode ? '#a855f7' : 'var(--border-primary)'}`,
         borderRadius: 20,
         padding: 40,
         maxWidth: 520,
         width: '90%',
         textAlign: 'center',
       }}>
-        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-accent)', letterSpacing: '0.2em', marginBottom: 8 }}>
-          Level {level}
+        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', color: interviewMode ? '#a855f7' : 'var(--text-accent)', letterSpacing: '0.2em', marginBottom: 8 }}>
+          {interviewMode ? 'Interview Prep — 45 min' : `Level ${level}`}
         </div>
         <h2 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 800, color: 'var(--text-primary)' }}>
           {narrative.title}
@@ -72,7 +72,7 @@ export default function LevelIntro() {
             transition: 'transform 150ms',
           }}
         >
-          <Play size={18} /> Start Mission
+          <Play size={18} /> {interviewMode ? 'Start Interview' : 'Start Mission'}
         </button>
       </div>
     </div>

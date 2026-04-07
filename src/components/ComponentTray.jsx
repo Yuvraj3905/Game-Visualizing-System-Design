@@ -39,8 +39,8 @@ const COMPONENT_TOOLTIPS = {
 const ALL_COMPONENTS = ['server', 'database', 'loadBalancer', 'cache', 'cdn', 'region', 'replica', 'healthCheck', 'apiGateway', 'messageQueue', 'worker', 'autoScaler', 'circuitBreaker'];
 
 export default function ComponentTray() {
-  const { level, money, addNode, gameStatus, sandboxMode } = useGameStore();
-  const config = LEVEL_CONFIGS[level] || LEVEL_CONFIGS[0];
+  const { level, money, addNode, gameStatus, sandboxMode, configOverride } = useGameStore();
+  const config = configOverride || LEVEL_CONFIGS[level] || LEVEL_CONFIGS[0];
   const unlocked = sandboxMode ? ALL_COMPONENTS : (config.unlockedComponents || []);
   const [collapsed, setCollapsed] = useState(window.innerWidth <= 768);
 

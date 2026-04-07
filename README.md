@@ -41,6 +41,7 @@ System Design Sim is an interactive, visual system design simulator. Instead of 
 - **Architecture grading** — S/A/B/C/D/F scores with radar chart visualization on cost, latency, resilience, simplicity
 - **Failure post-mortems** — bottleneck analysis, cascade visualization, smart fix suggestions, ideal solution comparison
 - **Mobile responsive** — adapts layout for tablet and phone with collapsible component tray
+- **Interview Prep Mode** — 5 timed system design interviews (URL Shortener, Chat, Notifications, Rate Limiter, File Storage) with rubric grading
 - **Daily Challenge** — same level for all players each day, streak tracking, 7-day history
 - **Sandbox mode** — unlimited budget, all components, no objectives
 - **Export as PNG** — download your architecture diagram as a shareable image
@@ -199,6 +200,8 @@ src/
 │   ├── ObjectiveChecklist.js    # Per-level win condition checklists
 │   ├── ArchitectureGrader.js    # Post-win grading (cost/latency/resilience/simplicity)
 │   ├── DailyChallenge.js       # Daily challenge logic, localStorage, streak tracking
+│   ├── InterviewConfigs.js     # 5 interview scenario definitions
+│   ├── InterviewGrader.js      # 5-dimension interview rubric scoring
 │   └── simulators/
 │       ├── TrafficSimulator.js
 │       ├── LoadBalancerSimulator.js
@@ -237,6 +240,8 @@ src/
 │   ├── LevelIntro.jsx           # Level briefing modal
 │   ├── DailyChallengeButton.jsx  # HUD button with streak badge
 │   ├── DailyChallengeModal.jsx  # Daily challenge info, start, results, history
+│   ├── InterviewHUD.jsx         # Timer + submit button for interview mode
+│   ├── InterviewResultScreen.jsx # Interview results with rubric + ideal approach
 │   ├── RadarChart.jsx            # SVG radar chart for architecture grading
 │   ├── WinScreen.jsx            # Victory screen + radar grade card + references
 │   ├── FailScreen.jsx           # Failure screen + post-mortem analysis

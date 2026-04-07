@@ -4,6 +4,8 @@ import { runTick } from '../engine/LevelOrchestrator.js';
 import * as Sound from '../audio/SoundEngine.js';
 import { gradeArchitecture } from '../engine/ArchitectureGrader.js';
 import { getDailyLevel, loadDailyResult, saveDailyResult as saveDailyToStorage, getStreak } from '../engine/DailyChallenge.js';
+import { INTERVIEW_SCENARIOS } from '../engine/InterviewConfigs.js';
+import { gradeInterview, saveInterviewResult } from '../engine/InterviewGrader.js';
 
 // Restore saved progress from localStorage
 function loadProgress() {
@@ -47,6 +49,14 @@ const useGameStore = create((set, get) => ({
   dailyGrade: null,
   dailyStreak: getStreak().count,
   showDailyModal: false,
+
+  // Interview prep
+  interviewMode: false,
+  interviewScenario: null,
+  interviewTimer: 0,
+  interviewTimerInterval: null,
+  interviewGrade: null,
+  configOverride: null, // Used by interview mode to override LEVEL_CONFIGS
 
   // Game state
   money: LEVEL_CONFIGS[1].budget,
@@ -235,8 +245,27 @@ const useGameStore = create((set, get) => ({
   },
 
   onWin: () => {
-    const { level, tickInterval, dailyMode } = get();
+    const { level, tickInterval, dailyMode, interviewMode, interviewScenario, interviewTimer, interviewTimerInterval } = get();
     if (tickInterval) clearInterval(tickInterval);
+
+    if (interviewMode) {
+      if (interviewTimerInterval) clearInterval(interviewTimerInterval);
+      const scenario = INTERVIEW_SCENARIOS[interviewScenario];
+      const iGrade = gradeInterview(get(), scenario);
+      const timeTaken = scenario.timeLimit - interviewTimer;
+      saveInterviewResult(interviewScenario, iGrade, timeTaken);
+      set({
+        simulationRunning: false,
+        tickInterval: null,
+        interviewTimerInterval: null,
+        gameStatus: 'won',
+        interviewGrade: iGrade,
+      });
+      Sound.stopMusic();
+      Sound.playSuccess();
+      return;
+    }
+
     const grade = gradeArchitecture(get());
 
     if (dailyMode) {
@@ -268,11 +297,13 @@ const useGameStore = create((set, get) => ({
   },
 
   onFail: () => {
-    const { tickInterval } = get();
+    const { tickInterval, interviewTimerInterval } = get();
     if (tickInterval) clearInterval(tickInterval);
+    if (interviewTimerInterval) clearInterval(interviewTimerInterval);
     set({
       simulationRunning: false,
       tickInterval: null,
+      interviewTimerInterval: null,
       gameStatus: 'failed',
     });
     Sound.stopMusic();
@@ -320,6 +351,7 @@ const useGameStore = create((set, get) => ({
   dismissIntro: () => {
     set({ gameStatus: 'playing' });
     get().startSimulation();
+    if (get().interviewMode) get().startInterviewTimer();
     Sound.startMusic();
   },
 
@@ -344,6 +376,97 @@ const useGameStore = create((set, get) => ({
   exitDailyChallenge: () => {
     const { unlockedLevel } = get();
     set({ dailyMode: false, dailyCompleted: false, dailyGrade: null });
+    get().loadLevel(unlockedLevel);
+  },
+
+  // Interview prep actions
+  loadInterview: (scenarioIndex) => {
+    const { tickInterval, interviewTimerInterval } = get();
+    if (tickInterval) clearInterval(tickInterval);
+    if (interviewTimerInterval) clearInterval(interviewTimerInterval);
+    Sound.stopMusic();
+
+    const scenario = INTERVIEW_SCENARIOS[scenarioIndex];
+    const config = {
+      ...scenario,
+      winLesson: '',
+      references: [],
+    };
+
+    const nodesWithInitial = scenario.initialNodes.map(n => ({
+      ...n,
+      data: { ...n.data, isInitial: true },
+    }));
+
+    set({
+      interviewMode: true,
+      interviewScenario: scenarioIndex,
+      interviewTimer: scenario.timeLimit,
+      interviewTimerInterval: null,
+      interviewGrade: null,
+      configOverride: { ...scenario, winLesson: '', references: [] },
+      dailyMode: false,
+      sandboxMode: false,
+      level: 0,
+      gameStatus: 'intro',
+      showLevelSelect: false,
+      money: scenario.budget,
+      rps: 0,
+      targetRps: 0,
+      latency: scenario.baseLatency,
+      nodes: nodesWithInitial,
+      edges: [...scenario.initialEdges],
+      simulationRunning: false,
+      tickInterval: null,
+      tickCount: 0,
+      sustainedTicks: 0,
+      grade: null,
+      metrics: {
+        rps: 0, totalCapacity: 0, overloadedServers: 0,
+        dbLoad: 0, dbCapacity: 0, avgCacheHitRate: 0,
+        avgLatency: 0, maxRegionLatency: 0, bouncedUsers: 0,
+        healthPercent: 100, systemDown: false, survivedDisaster: false,
+      },
+      cacheState: {},
+      failoverState: {},
+      queueState: {},
+      rateLimiterState: {},
+      autoScalerState: {},
+      chaosState: {},
+    });
+  },
+
+  startInterviewTimer: () => {
+    const interval = setInterval(() => {
+      const timer = get().interviewTimer;
+      if (timer <= 1) {
+        clearInterval(interval);
+        set({ interviewTimer: 0, interviewTimerInterval: null });
+        get().onFail();
+      } else {
+        set({ interviewTimer: timer - 1 });
+      }
+    }, 1000);
+    set({ interviewTimerInterval: interval });
+  },
+
+  submitSolution: () => {
+    const { interviewMode, gameStatus } = get();
+    if (!interviewMode || gameStatus !== 'playing') return;
+    get().onWin();
+  },
+
+  exitInterview: () => {
+    const { interviewTimerInterval, unlockedLevel } = get();
+    if (interviewTimerInterval) clearInterval(interviewTimerInterval);
+    set({
+      interviewMode: false,
+      interviewScenario: null,
+      interviewTimer: 0,
+      interviewTimerInterval: null,
+      interviewGrade: null,
+      configOverride: null,
+    });
     get().loadLevel(unlockedLevel);
   },
 

@@ -1,9 +1,11 @@
-import { Lock, Check, ChevronRight, X, Beaker } from 'lucide-react';
+import { Lock, Check, ChevronRight, X, Beaker, Briefcase } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS, TOTAL_LEVELS } from '../engine/LevelConfigs';
+import { INTERVIEW_SCENARIOS } from '../engine/InterviewConfigs';
+import { loadInterviewResult } from '../engine/InterviewGrader';
 
 export default function LevelSelect() {
-  const { showLevelSelect, toggleLevelSelect, unlockedLevel, level: currentLevel, loadLevel, stopSimulation, startSandbox } = useGameStore();
+  const { showLevelSelect, toggleLevelSelect, unlockedLevel, level: currentLevel, loadLevel, stopSimulation, startSandbox, loadInterview } = useGameStore();
 
   if (!showLevelSelect) return null;
 
@@ -119,6 +121,70 @@ export default function LevelSelect() {
             </div>
             <ChevronRight size={16} style={{ color: 'var(--text-accent)' }} />
           </button>
+
+          {/* Interview Prep Section */}
+          <div style={{
+            marginTop: 16, paddingTop: 16,
+            borderTop: '1px solid var(--border-primary)',
+          }}>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10,
+            }}>
+              <Briefcase size={16} style={{ color: '#a855f7' }} />
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#a855f7' }}>Interview Prep</span>
+              <span style={{ fontSize: 10, color: 'var(--text-muted)', padding: '2px 6px', background: 'rgba(168, 85, 247, 0.1)', borderRadius: 8 }}>
+                45 min timed
+              </span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {INTERVIEW_SCENARIOS.map((scenario, i) => {
+                const saved = loadInterviewResult(i);
+                const OUTCOME_COLORS = { 'Strong Hire': '#22c55e', 'Hire': '#3b82f6', 'Lean Hire': '#f59e0b', 'No Hire': '#ef4444' };
+                return (
+                  <button
+                    key={i}
+                    onClick={() => { toggleLevelSelect(); loadInterview(i); }}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 14,
+                      padding: '12px 14px', borderRadius: 10,
+                      background: 'var(--bg-tertiary)',
+                      border: '1px solid var(--border-primary)',
+                      cursor: 'pointer', textAlign: 'left',
+                      transition: 'all 150ms', width: '100%',
+                      color: 'inherit', fontFamily: 'inherit',
+                    }}
+                  >
+                    <div style={{
+                      width: 32, height: 32, borderRadius: '50%', display: 'flex',
+                      alignItems: 'center', justifyContent: 'center',
+                      background: 'rgba(168, 85, 247, 0.1)', flexShrink: 0,
+                    }}>
+                      <Briefcase size={14} style={{ color: '#a855f7' }} />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
+                        {scenario.name}
+                      </div>
+                      <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>
+                        {scenario.subtitle}
+                      </div>
+                    </div>
+                    {saved ? (
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 8,
+                        color: OUTCOME_COLORS[saved.bestOutcome] || 'var(--text-muted)',
+                        background: `${OUTCOME_COLORS[saved.bestOutcome] || 'var(--text-muted)'}15`,
+                      }}>
+                        {saved.bestScore}/100
+                      </span>
+                    ) : (
+                      <ChevronRight size={14} style={{ color: 'var(--text-muted)' }} />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </div>

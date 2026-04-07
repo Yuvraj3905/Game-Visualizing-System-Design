@@ -42,6 +42,7 @@ import SandboxBanner from './components/SandboxMode';
 import ConceptLibrary from './concepts/ConceptLibrary';
 import ConceptViewer from './concepts/ConceptViewer';
 import DailyChallengeModal from './components/DailyChallengeModal';
+import InterviewResultScreen from './components/InterviewResultScreen';
 import * as Sound from './audio/SoundEngine';
 
 const isDevMode = new URLSearchParams(window.location.search).get('dev') === 'true';
@@ -264,6 +265,7 @@ export default function App() {
       <SandboxBanner />
       <ConceptLibrary />
       <DailyChallengeModal />
+      <InterviewResultScreen />
       <ConceptViewer />
       {isDevMode && <DevPanel />}
     </div>

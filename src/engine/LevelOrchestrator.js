@@ -41,7 +41,7 @@ export function runTick(gameState) {
 
   if (!simulationRunning) return {};
 
-  const config = LEVEL_CONFIGS[level];
+  const config = gameState.configOverride || LEVEL_CONFIGS[level];
   if (!config) return {};
 
   // 1. Ramp traffic

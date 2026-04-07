@@ -4,11 +4,11 @@ import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
 import FailurePostMortem from './FailurePostMortem';
 
 export default function FailScreen() {
-  const { level, gameStatus, retryLevel, metrics } = useGameStore();
+  const { level, gameStatus, retryLevel, metrics, configOverride, interviewMode, loadInterview, interviewScenario } = useGameStore();
 
   if (gameStatus !== 'failed') return null;
 
-  const config = LEVEL_CONFIGS[level];
+  const config = configOverride || LEVEL_CONFIGS[level];
   const isBlackout = metrics.systemDown;
 
   return (
@@ -71,7 +71,7 @@ export default function FailScreen() {
         <FailurePostMortem />
 
         <button
-          onClick={retryLevel}
+          onClick={interviewMode ? () => loadInterview(interviewScenario) : retryLevel}
           style={{
             padding: '12px 32px', background: 'var(--color-critical)', color: 'white',
             border: 'none', borderRadius: 12, fontWeight: 700, fontSize: 15,

@@ -17,9 +17,9 @@ const GRADE_COLORS = {
 
 
 export default function WinScreen() {
-  const { level, gameStatus, loadLevel, grade, dailyMode, dailyStreak, exitDailyChallenge } = useGameStore();
+  const { level, gameStatus, loadLevel, grade, dailyMode, dailyStreak, exitDailyChallenge, interviewMode } = useGameStore();
 
-  if (gameStatus !== 'won') return null;
+  if (gameStatus !== 'won' || interviewMode) return null;
 
   const config = LEVEL_CONFIGS[level];
   const hasNextLevel = level < TOTAL_LEVELS;
