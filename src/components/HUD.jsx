@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DollarSign, Activity, Clock, Heart, Users, RotateCcw, List, HelpCircle, Volume2, VolumeX, BookOpen } from 'lucide-react';
+import { DollarSign, Activity, Clock, Heart, Users, RotateCcw, List, HelpCircle, Volume2, VolumeX, BookOpen, Briefcase } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
 import Tooltip from './Tooltip';
@@ -7,6 +7,7 @@ import * as Sound from '../audio/SoundEngine';
 import ExportButton from './ExportButton';
 import DailyChallengeButton from './DailyChallengeButton';
 import InterviewHUD from './InterviewHUD';
+import { INTERVIEW_SCENARIOS } from '../engine/InterviewConfigs';
 
 function StatCard({ icon, label, value, unit, color, animate, tooltip, compact }) {
   const Icon = icon;
@@ -37,7 +38,8 @@ function StatCard({ icon, label, value, unit, color, animate, tooltip, compact }
 }
 
 export default function HUD() {
-  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute, sandboxMode, setShowConceptLibrary, dailyMode, interviewMode } = useGameStore();
+  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute, sandboxMode, setShowConceptLibrary, dailyMode, interviewMode, loadInterview } = useGameStore();
+  const [showInterviewPicker, setShowInterviewPicker] = useState(false);
   const config = LEVEL_CONFIGS[level] || LEVEL_CONFIGS[0];
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -167,6 +169,68 @@ export default function HUD() {
             <BookOpen size={14} />{!isCompact && ' Learn'}
           </button>
         </Tooltip>
+        <div style={{ position: 'relative' }}>
+          <Tooltip text="Interview Prep — timed system design challenges" position="bottom">
+            <button
+              onClick={() => setShowInterviewPicker(prev => !prev)}
+              style={{
+                padding: isPhone ? '6px 8px' : '8px 12px',
+                background: 'rgba(168, 85, 247, 0.15)',
+                color: '#a855f7',
+                border: '1px solid #a855f7',
+                borderRadius: 10,
+                fontSize: isPhone ? 11 : 13,
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: isPhone ? 4 : 6,
+              }}
+            >
+              <Briefcase size={14} />{!isCompact && ' Interview'}
+            </button>
+          </Tooltip>
+          {showInterviewPicker && (
+            <>
+              <div
+                style={{ position: 'fixed', inset: 0, zIndex: 29 }}
+                onClick={() => setShowInterviewPicker(false)}
+              />
+              <div style={{
+                position: 'absolute', top: '100%', right: 0, marginTop: 8,
+                background: 'var(--bg-secondary)', border: '1px solid #a855f7',
+                borderRadius: 12, padding: 8, width: 260, zIndex: 30,
+                boxShadow: '0 12px 32px rgba(0,0,0,0.4)',
+              }}>
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', color: '#a855f7', padding: '4px 8px', marginBottom: 4, letterSpacing: '0.08em' }}>
+                  Pick a Scenario
+                </div>
+                {INTERVIEW_SCENARIOS.map((s, i) => (
+                  <button
+                    key={i}
+                    onClick={() => { setShowInterviewPicker(false); loadInterview(i); }}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 8,
+                      padding: '8px 10px', borderRadius: 8, width: '100%',
+                      background: 'var(--bg-tertiary)', border: 'none',
+                      cursor: 'pointer', textAlign: 'left', marginBottom: 4,
+                      color: 'inherit', fontFamily: 'inherit',
+                      transition: 'background 150ms',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-primary)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-tertiary)'}
+                  >
+                    <Briefcase size={12} style={{ color: '#a855f7', flexShrink: 0 }} />
+                    <div>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)' }}>{s.name}</div>
+                      <div style={{ fontSize: 9, color: 'var(--text-muted)' }}>{s.subtitle}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
         {!isPhone && <ExportButton />}
         {!isPhone && (
           <Tooltip text="Take a guided tour of the interface" position="bottom">
