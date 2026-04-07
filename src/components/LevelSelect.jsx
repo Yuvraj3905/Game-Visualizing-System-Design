@@ -24,16 +24,20 @@ export default function LevelSelect() {
       background: 'rgba(15, 23, 42, 0.85)',
       backdropFilter: 'blur(8px)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: '20px 0',
     }}>
       <div className="animate-slide-up" style={{
         background: 'var(--bg-secondary)',
         border: '1px solid var(--border-primary)',
         borderRadius: 20,
-        padding: '32px',
         maxWidth: 480,
         width: '90%',
+        maxHeight: '85vh',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '24px 32px 16px', flexShrink: 0 }}>
           <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: 'var(--text-primary)' }}>Select Level</h2>
           <button
             onClick={toggleLevelSelect}
@@ -43,7 +47,7 @@ export default function LevelSelect() {
           </button>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ overflowY: 'auto', padding: '0 32px 24px', display: 'flex', flexDirection: 'column', gap: 8 }}>
           {levels.map(lvl => {
             const config = LEVEL_CONFIGS[lvl];
             const isLocked = lvl > unlockedLevel;
