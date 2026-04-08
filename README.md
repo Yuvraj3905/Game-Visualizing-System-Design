@@ -43,8 +43,10 @@ System Design Sim is an interactive, visual system design simulator. Instead of 
 - **Mobile responsive** — adapts layout for tablet and phone with collapsible component tray
 - **Interview Prep Mode** — 5 timed system design interviews (URL Shortener, Chat, Notifications, Rate Limiter, File Storage) with rubric grading
 - **Daily Challenge** — same level for all players each day, streak tracking, 7-day history
+- **Learning Paths** — 5 structured curriculum tracks (Foundations, Backend Mastery, Distributed Systems, Interview Cracker, DevOps & SRE) with progress tracking
+- **Weekly Tournament** — 3 rounds (easy/medium/hard) seeded per week, combined scoring, history
 - **Sandbox mode** — unlimited budget, all components, no objectives
-- **Export as PNG** — download your architecture diagram as a shareable image
+- **Export as PNG** — download architecture with grade badge, stats overlay, and auto-copied share caption
 - **Synthesized sound effects & music** — all generated via Web Audio API, zero audio files
 - **Guided tour & tooltips** — onboarding for new players, hover tooltips on everything
 - **Live objective panel** — real-time checklist with completion counter
@@ -202,6 +204,8 @@ src/
 │   ├── DailyChallenge.js       # Daily challenge logic, localStorage, streak tracking
 │   ├── InterviewConfigs.js     # 5 interview scenario definitions
 │   ├── InterviewGrader.js      # 5-dimension interview rubric scoring
+│   ├── LearningPaths.js        # 5 structured curriculum tracks with progress
+│   ├── WeeklyTournament.js     # Weekly 3-round tournament with seeded levels
 │   └── simulators/
 │       ├── TrafficSimulator.js
 │       ├── LoadBalancerSimulator.js
@@ -242,6 +246,8 @@ src/
 │   ├── DailyChallengeModal.jsx  # Daily challenge info, start, results, history
 │   ├── InterviewHUD.jsx         # Timer + submit button for interview mode
 │   ├── InterviewResultScreen.jsx # Interview results with rubric + ideal approach
+│   ├── LearningPathsModal.jsx   # Learning path selection and step tracking
+│   ├── WeeklyTournamentModal.jsx # Weekly tournament rounds and history
 │   ├── RadarChart.jsx            # SVG radar chart for architecture grading
 │   ├── WinScreen.jsx            # Victory screen + radar grade card + references
 │   ├── FailScreen.jsx           # Failure screen + post-mortem analysis

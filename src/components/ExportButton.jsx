@@ -50,8 +50,8 @@ function getNodeCenter(node, offsetX, offsetY) {
 
 export default function ExportButton() {
   const handleExport = () => {
-    const { nodes, edges, level, grade, rps, latency, metrics } = useGameStore.getState();
-    const config = LEVEL_CONFIGS[level];
+    const { nodes, edges, level, grade, rps, latency, metrics, configOverride } = useGameStore.getState();
+    const config = configOverride || LEVEL_CONFIGS[level];
 
     if (nodes.length === 0) return;
 
@@ -88,10 +88,27 @@ export default function ExportButton() {
 
     if (grade) {
       const titleWidth = ctx.measureText(titleText).width;
-      const gradeColors = { S: '#facc15', A: '#22c55e', B: '#3b82f6', C: '#f59e0b', D: '#ef4444' };
-      ctx.fillStyle = gradeColors[grade] || '#94a3b8';
-      ctx.font = 'bold 20px "JetBrains Mono", monospace';
-      ctx.fillText(grade, CANVAS_PADDING + titleWidth + 16, 37);
+      const gradeColors = { S: '#facc15', A: '#22c55e', B: '#3b82f6', C: '#94a3b8', D: '#f59e0b', F: '#ef4444' };
+      const letterColor = gradeColors[grade.letter] || '#94a3b8';
+
+      // Grade badge
+      const badgeX = CANVAS_PADDING + titleWidth + 16;
+      ctx.fillStyle = letterColor + '25';
+      drawRoundedRect(ctx, badgeX, 18, 48, 28, 8);
+      ctx.fill();
+      ctx.strokeStyle = letterColor;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.fillStyle = letterColor;
+      ctx.font = 'bold 18px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(grade.letter, badgeX + 24, 37);
+      ctx.textAlign = 'left';
+
+      // Score
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.fillText(`${grade.overall}/100`, badgeX + 56, 37);
     }
 
     // Offset for drawing nodes/edges within the graph area
@@ -213,6 +230,11 @@ export default function ExportButton() {
     link.download = `system-design-level-${level}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
+
+    // Copy caption to clipboard
+    const gradeText = grade ? ` | Grade: ${grade.letter} (${grade.overall}/100)` : '';
+    const caption = `I designed ${config?.name || `Level ${level}`} in System Design Sim! ${Math.round(rps).toLocaleString()} RPS, ${Math.round(latency)}ms latency, ${nodes.length} nodes${gradeText}\n\nPlay: https://yuvraj3905.github.io/Game-Visualizing-System-Design/`;
+    try { navigator.clipboard.writeText(caption); } catch {}
   };
 
   return (

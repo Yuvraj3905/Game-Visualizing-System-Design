@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DollarSign, Activity, Clock, Heart, Users, RotateCcw, List, HelpCircle, Volume2, VolumeX, BookOpen, Briefcase } from 'lucide-react';
+import { DollarSign, Activity, Clock, Heart, Users, RotateCcw, List, HelpCircle, Volume2, VolumeX, BookOpen, Briefcase, Map, Trophy } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
 import Tooltip from './Tooltip';
@@ -38,7 +38,7 @@ function StatCard({ icon, label, value, unit, color, animate, tooltip, compact }
 }
 
 export default function HUD() {
-  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute, sandboxMode, setShowConceptLibrary, dailyMode, interviewMode, loadInterview } = useGameStore();
+  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute, sandboxMode, setShowConceptLibrary, dailyMode, interviewMode, loadInterview, toggleLearningPaths, toggleWeeklyTournament } = useGameStore();
   const [showInterviewPicker, setShowInterviewPicker] = useState(false);
   const config = LEVEL_CONFIGS[level] || LEVEL_CONFIGS[0];
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -167,6 +167,34 @@ export default function HUD() {
             }}
           >
             <BookOpen size={14} />{!isCompact && ' Learn'}
+          </button>
+        </Tooltip>
+        <Tooltip text="Learning Paths — structured curriculum tracks" position="bottom">
+          <button
+            onClick={toggleLearningPaths}
+            style={{
+              padding: isPhone ? '6px 8px' : '8px 12px',
+              background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e',
+              border: '1px solid #22c55e40', borderRadius: 10,
+              fontSize: isPhone ? 11 : 13, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', gap: isPhone ? 4 : 6,
+            }}
+          >
+            <Map size={14} />{!isCompact && ' Paths'}
+          </button>
+        </Tooltip>
+        <Tooltip text="Weekly Tournament — 3 rounds, compete for top score" position="bottom">
+          <button
+            onClick={toggleWeeklyTournament}
+            style={{
+              padding: isPhone ? '6px 8px' : '8px 12px',
+              background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b',
+              border: '1px solid #f59e0b40', borderRadius: 10,
+              fontSize: isPhone ? 11 : 13, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', gap: isPhone ? 4 : 6,
+            }}
+          >
+            <Trophy size={14} />{!isCompact && ' Weekly'}
           </button>
         </Tooltip>
         <div style={{ position: 'relative' }}>

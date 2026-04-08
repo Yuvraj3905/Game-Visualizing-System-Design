@@ -43,6 +43,8 @@ import ConceptLibrary from './concepts/ConceptLibrary';
 import ConceptViewer from './concepts/ConceptViewer';
 import DailyChallengeModal from './components/DailyChallengeModal';
 import InterviewResultScreen from './components/InterviewResultScreen';
+import LearningPathsModal from './components/LearningPathsModal';
+import WeeklyTournamentModal from './components/WeeklyTournamentModal';
 import * as Sound from './audio/SoundEngine';
 
 const isDevMode = new URLSearchParams(window.location.search).get('dev') === 'true';
@@ -266,6 +268,8 @@ export default function App() {
       <ConceptLibrary />
       <DailyChallengeModal />
       <InterviewResultScreen />
+      <LearningPathsModal />
+      <WeeklyTournamentModal />
       <ConceptViewer />
       {isDevMode && <DevPanel />}
     </div>

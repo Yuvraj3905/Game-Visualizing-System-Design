@@ -42,6 +42,8 @@ const useGameStore = create((set, get) => ({
   sandboxMode: false,
   showConceptLibrary: false,
   activeConceptId: null,
+  showLearningPaths: false,
+  showWeeklyTournament: false,
 
   // Daily challenge
   dailyMode: false,
@@ -355,6 +357,8 @@ const useGameStore = create((set, get) => ({
     Sound.startMusic();
   },
 
+  toggleLearningPaths: () => set(state => ({ showLearningPaths: !state.showLearningPaths })),
+  toggleWeeklyTournament: () => set(state => ({ showWeeklyTournament: !state.showWeeklyTournament })),
   setShowConceptLibrary: (val) => set({ showConceptLibrary: val, activeConceptId: null }),
   setActiveConcept: (id) => set({ activeConceptId: id }),
   closeConceptLibrary: () => set({ showConceptLibrary: false, activeConceptId: null }),
