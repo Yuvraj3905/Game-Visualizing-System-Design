@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DollarSign, Activity, Clock, Heart, Users, RotateCcw, List, HelpCircle, Volume2, VolumeX, BookOpen, Briefcase, Map, Trophy, BarChart3 } from 'lucide-react';
+import { DollarSign, Activity, Clock, Heart, Users, RotateCcw, List, HelpCircle, Volume2, VolumeX, BookOpen, Briefcase, Map, Trophy, BarChart3, Wrench } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
 import Tooltip from './Tooltip';
@@ -38,7 +38,7 @@ function StatCard({ icon, label, value, unit, color, animate, tooltip, compact }
 }
 
 export default function HUD() {
-  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute, sandboxMode, setShowConceptLibrary, dailyMode, interviewMode, loadInterview, toggleLearningPaths, toggleWeeklyTournament, toggleMetricsDashboard, showMetricsDashboard } = useGameStore();
+  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute, sandboxMode, setShowConceptLibrary, dailyMode, interviewMode, loadInterview, toggleLearningPaths, toggleWeeklyTournament, toggleMetricsDashboard, showMetricsDashboard, toggleLevelEditor } = useGameStore();
   const [showInterviewPicker, setShowInterviewPicker] = useState(false);
   const config = LEVEL_CONFIGS[level] || LEVEL_CONFIGS[0];
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -210,6 +210,20 @@ export default function HUD() {
             }}
           >
             <BarChart3 size={14} />
+          </button>
+        </Tooltip>
+        <Tooltip text="Custom Level Editor" position="bottom">
+          <button
+            onClick={toggleLevelEditor}
+            style={{
+              padding: isPhone ? '6px 8px' : '8px 12px',
+              background: 'var(--bg-tertiary)', color: 'var(--text-secondary)',
+              border: '1px solid var(--border-primary)', borderRadius: 10,
+              fontSize: isPhone ? 11 : 13, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', gap: isPhone ? 4 : 6,
+            }}
+          >
+            <Wrench size={14} />{!isCompact && ' Create'}
           </button>
         </Tooltip>
         <div style={{ position: 'relative' }}>

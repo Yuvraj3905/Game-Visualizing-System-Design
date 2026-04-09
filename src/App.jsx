@@ -46,6 +46,7 @@ import InterviewResultScreen from './components/InterviewResultScreen';
 import LearningPathsModal from './components/LearningPathsModal';
 import WeeklyTournamentModal from './components/WeeklyTournamentModal';
 import MetricsDashboard from './components/MetricsDashboard';
+import LevelEditorModal from './components/LevelEditorModal';
 import * as Sound from './audio/SoundEngine';
 
 const isDevMode = new URLSearchParams(window.location.search).get('dev') === 'true';
@@ -272,6 +273,7 @@ export default function App() {
       <InterviewResultScreen />
       <LearningPathsModal />
       <WeeklyTournamentModal />
+      <LevelEditorModal />
       <ConceptViewer />
       {isDevMode && <DevPanel />}
     </div>

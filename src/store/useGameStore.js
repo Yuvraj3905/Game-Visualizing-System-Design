@@ -6,6 +6,7 @@ import { gradeArchitecture } from '../engine/ArchitectureGrader.js';
 import { getDailyLevel, loadDailyResult, saveDailyResult as saveDailyToStorage, getStreak } from '../engine/DailyChallenge.js';
 import { INTERVIEW_SCENARIOS } from '../engine/InterviewConfigs.js';
 import { gradeInterview, saveInterviewResult } from '../engine/InterviewGrader.js';
+import { buildLevelConfig } from '../engine/CustomLevels.js';
 
 // Restore saved progress from localStorage
 function loadProgress() {
@@ -44,6 +45,7 @@ const useGameStore = create((set, get) => ({
   activeConceptId: null,
   showLearningPaths: false,
   showWeeklyTournament: false,
+  showLevelEditor: false,
 
   // Daily challenge
   dailyMode: false,
@@ -371,6 +373,53 @@ const useGameStore = create((set, get) => ({
   toggleLearningPaths: () => set(state => ({ showLearningPaths: !state.showLearningPaths })),
   toggleWeeklyTournament: () => set(state => ({ showWeeklyTournament: !state.showWeeklyTournament })),
   toggleMetricsDashboard: () => set(state => ({ showMetricsDashboard: !state.showMetricsDashboard })),
+  toggleLevelEditor: () => set(state => ({ showLevelEditor: !state.showLevelEditor })),
+
+  loadCustomLevel: (customData) => {
+    const { tickInterval, interviewTimerInterval } = get();
+    if (tickInterval) clearInterval(tickInterval);
+    if (interviewTimerInterval) clearInterval(interviewTimerInterval);
+
+    const config = buildLevelConfig(customData);
+    const nodesWithInitial = config.initialNodes.map(n => ({
+      ...n, data: { ...n.data, isInitial: true },
+    }));
+
+    set({
+      configOverride: config,
+      interviewMode: false,
+      dailyMode: false,
+      sandboxMode: false,
+      level: 0,
+      gameStatus: 'intro',
+      showLevelSelect: false,
+      showLevelEditor: false,
+      money: config.budget,
+      rps: 0,
+      targetRps: 0,
+      latency: config.baseLatency,
+      nodes: nodesWithInitial,
+      edges: [...config.initialEdges],
+      simulationRunning: false,
+      tickInterval: null,
+      tickCount: 0,
+      sustainedTicks: 0,
+      metricsHistory: [],
+      cacheState: {},
+      failoverState: {},
+      queueState: {},
+      rateLimiterState: {},
+      autoScalerState: {},
+      chaosState: {},
+      grade: null,
+      metrics: {
+        rps: 0, totalCapacity: 0, overloadedServers: 0,
+        dbLoad: 0, dbCapacity: 0, avgCacheHitRate: 0,
+        avgLatency: 0, maxRegionLatency: 0, bouncedUsers: 0,
+        healthPercent: 100, systemDown: false, survivedDisaster: false,
+      },
+    });
+  },
   setShowConceptLibrary: (val) => set({ showConceptLibrary: val, activeConceptId: null }),
   setActiveConcept: (id) => set({ activeConceptId: id }),
   closeConceptLibrary: () => set({ showConceptLibrary: false, activeConceptId: null }),
