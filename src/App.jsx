@@ -45,6 +45,7 @@ import DailyChallengeModal from './components/DailyChallengeModal';
 import InterviewResultScreen from './components/InterviewResultScreen';
 import LearningPathsModal from './components/LearningPathsModal';
 import WeeklyTournamentModal from './components/WeeklyTournamentModal';
+import MetricsDashboard from './components/MetricsDashboard';
 import * as Sound from './audio/SoundEngine';
 
 const isDevMode = new URLSearchParams(window.location.search).get('dev') === 'true';
@@ -255,6 +256,7 @@ export default function App() {
             />
           </ReactFlow>
           <SustainBar />
+          <MetricsDashboard />
           <ObjectivePanel />
         </div>
       </div>

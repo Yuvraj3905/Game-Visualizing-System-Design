@@ -59,6 +59,8 @@ const useGameStore = create((set, get) => ({
   interviewTimerInterval: null,
   interviewGrade: null,
   configOverride: null, // Used by interview mode to override LEVEL_CONFIGS
+  metricsHistory: [], // Array of { tick, rps, latency, health } for dashboard
+  showMetricsDashboard: false,
 
   // Game state
   money: LEVEL_CONFIGS[1].budget,
@@ -119,6 +121,7 @@ const useGameStore = create((set, get) => ({
       simulationRunning: false,
       tickCount: 0,
       sustainedTicks: 0,
+      metricsHistory: [],
       cacheState: {},
       failoverState: {},
       queueState: {},
@@ -148,6 +151,14 @@ const useGameStore = create((set, get) => ({
 
       const updates = runTick(state);
       if (Object.keys(updates).length > 0) {
+        // Capture metrics snapshot for dashboard
+        const newRps = updates.rps ?? state.rps;
+        const newLatency = updates.latency ?? state.latency;
+        const newHealth = updates.metrics?.healthPercent ?? state.metrics.healthPercent;
+        const tick = (updates.tickCount ?? state.tickCount);
+        const history = state.metricsHistory;
+        const snapshot = { tick, rps: Math.round(newRps), latency: Math.round(newLatency), health: Math.round(newHealth) };
+        updates.metricsHistory = [...history.slice(-119), snapshot]; // keep last 120 points (60 seconds)
         set(updates);
 
         if (updates.gameStatus === 'won') {
@@ -359,6 +370,7 @@ const useGameStore = create((set, get) => ({
 
   toggleLearningPaths: () => set(state => ({ showLearningPaths: !state.showLearningPaths })),
   toggleWeeklyTournament: () => set(state => ({ showWeeklyTournament: !state.showWeeklyTournament })),
+  toggleMetricsDashboard: () => set(state => ({ showMetricsDashboard: !state.showMetricsDashboard })),
   setShowConceptLibrary: (val) => set({ showConceptLibrary: val, activeConceptId: null }),
   setActiveConcept: (id) => set({ activeConceptId: id }),
   closeConceptLibrary: () => set({ showConceptLibrary: false, activeConceptId: null }),
@@ -501,6 +513,7 @@ const useGameStore = create((set, get) => ({
       simulationRunning: false,
       tickCount: 0,
       sustainedTicks: 0,
+      metricsHistory: [],
       cacheState: {},
       failoverState: {},
       queueState: {},

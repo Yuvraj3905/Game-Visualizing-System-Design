@@ -46,6 +46,7 @@ System Design Sim is an interactive, visual system design simulator. Instead of 
 - **Learning Paths** — 5 structured curriculum tracks (Foundations, Backend Mastery, Distributed Systems, Interview Cracker, DevOps & SRE) with progress tracking
 - **Weekly Tournament** — 3 rounds (easy/medium/hard) seeded per week, combined scoring, history
 - **Sandbox mode** — unlimited budget, all components, no objectives
+- **Live Metrics Dashboard** — real-time line charts for RPS, latency, and health over time during gameplay
 - **Export as PNG** — download architecture with grade badge, stats overlay, and auto-copied share caption
 - **Synthesized sound effects & music** — all generated via Web Audio API, zero audio files
 - **Guided tour & tooltips** — onboarding for new players, hover tooltips on everything
@@ -248,6 +249,7 @@ src/
 │   ├── InterviewResultScreen.jsx # Interview results with rubric + ideal approach
 │   ├── LearningPathsModal.jsx   # Learning path selection and step tracking
 │   ├── WeeklyTournamentModal.jsx # Weekly tournament rounds and history
+│   ├── MetricsDashboard.jsx     # Live line charts for RPS/latency/health
 │   ├── RadarChart.jsx            # SVG radar chart for architecture grading
 │   ├── WinScreen.jsx            # Victory screen + radar grade card + references
 │   ├── FailScreen.jsx           # Failure screen + post-mortem analysis
