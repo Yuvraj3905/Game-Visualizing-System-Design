@@ -55,6 +55,7 @@ System Design Sim is an interactive, visual system design simulator. Instead of 
 - **Sell-back & delete** — undo purchases (75% refund), delete edges with Delete key
 - **Session persistence** — progress saved to localStorage, resume where you left off
 - **Deep-dive references** — curated links to real-world engineering blogs on every win screen
+- **Accessibility** — high contrast mode, skip-to-content link, ARIA labels, screen reader announcements, reduced motion support
 - **Dev mode** — `?dev=true` for jump-to-level, unlock all, add budget, force win
 
 ---
@@ -300,7 +301,6 @@ src/
 
 Contributions are welcome! Here are some ideas:
 
-- Accessibility improvements (screen reader labels, keyboard navigation, high contrast)
 - Write tests (no test framework configured yet)
 - Add more levels beyond 15
 - Metrics dashboard with live charts (RPS/latency over time)

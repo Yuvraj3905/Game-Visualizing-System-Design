@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DollarSign, Activity, Clock, Heart, Users, RotateCcw, List, HelpCircle, Volume2, VolumeX, BookOpen, Briefcase, Map, Trophy, BarChart3, Wrench } from 'lucide-react';
+import { DollarSign, Activity, Clock, Heart, Users, RotateCcw, List, HelpCircle, Volume2, VolumeX, BookOpen, Briefcase, Map, Trophy, BarChart3, Wrench, Contrast } from 'lucide-react';
 import useGameStore from '../store/useGameStore';
 import { LEVEL_CONFIGS } from '../engine/LevelConfigs';
 import Tooltip from './Tooltip';
@@ -38,7 +38,7 @@ function StatCard({ icon, label, value, unit, color, animate, tooltip, compact }
 }
 
 export default function HUD() {
-  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute, sandboxMode, setShowConceptLibrary, dailyMode, interviewMode, loadInterview, toggleLearningPaths, toggleWeeklyTournament, toggleMetricsDashboard, showMetricsDashboard, toggleLevelEditor } = useGameStore();
+  const { money, rps, latency, metrics, level, gameStatus, toggleLevelSelect, retryLevel, setTargetTraffic, targetRps, setShowTour, budgetShake, audioMuted, toggleAudioMute, sandboxMode, setShowConceptLibrary, dailyMode, interviewMode, loadInterview, toggleLearningPaths, toggleWeeklyTournament, toggleMetricsDashboard, showMetricsDashboard, toggleLevelEditor, highContrast, toggleHighContrast } = useGameStore();
   const [showInterviewPicker, setShowInterviewPicker] = useState(false);
   const config = LEVEL_CONFIGS[level] || LEVEL_CONFIGS[0];
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -56,7 +56,7 @@ export default function HUD() {
   const healthColor = metrics.healthPercent > 70 ? 'var(--color-healthy)' : metrics.healthPercent > 30 ? 'var(--color-warning)' : 'var(--color-critical)';
 
   return (
-    <div style={{
+    <nav role="toolbar" aria-label="Game controls" style={{
       height: isPhone ? 56 : 72,
       background: 'var(--bg-secondary)',
       borderBottom: '1px solid var(--border-primary)',
@@ -321,7 +321,27 @@ export default function HUD() {
             </button>
           </Tooltip>
         )}
+        {!isPhone && (
+          <Tooltip text={highContrast ? 'Normal contrast' : 'High contrast mode'} position="bottom">
+            <button
+              onClick={toggleHighContrast}
+              aria-label={highContrast ? 'Switch to normal contrast' : 'Switch to high contrast mode'}
+              style={{
+                width: 36, height: 36, borderRadius: '50%',
+                background: highContrast ? 'var(--color-info-bg)' : 'var(--bg-tertiary)',
+                border: `1px solid ${highContrast ? 'var(--color-info)' : 'var(--border-primary)'}`,
+                color: highContrast ? 'var(--color-info)' : 'var(--text-muted)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', flexShrink: 0,
+              }}
+            >
+              <Contrast size={16} />
+            </button>
+          </Tooltip>
+        )}
       </div>
-    </div>
+      {/* Live region for screen reader announcements */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only" id="game-announcer" />
+    </nav>
   );
 }

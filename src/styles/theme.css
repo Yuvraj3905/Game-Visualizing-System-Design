@@ -253,6 +253,79 @@
   50% { box-shadow: 0 0 12px var(--color-info-glow); transform: scale(1.3); }
 }
 
+/* --- Accessibility --- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: 9999;
+  padding: 8px 16px;
+  background: var(--text-accent);
+  color: var(--bg-primary);
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: top 200ms;
+}
+
+.skip-link:focus {
+  top: 8px;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--text-accent);
+  outline-offset: 2px;
+}
+
+/* High contrast mode */
+[data-high-contrast="true"] {
+  --bg-primary: #000000;
+  --bg-secondary: #111111;
+  --bg-tertiary: #222222;
+  --bg-card: #111111;
+  --bg-node: #111111;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --text-muted: #999999;
+  --text-accent: #5cb8ff;
+  --border-primary: #555555;
+  --border-node: #777777;
+  --color-healthy: #00ff66;
+  --color-healthy-bg: rgba(0, 255, 102, 0.15);
+  --color-warning: #ffcc00;
+  --color-warning-bg: rgba(255, 204, 0, 0.15);
+  --color-critical: #ff3333;
+  --color-critical-bg: rgba(255, 51, 51, 0.15);
+  --color-info: #6699ff;
+  --color-info-bg: rgba(102, 153, 255, 0.15);
+}
+
+[data-high-contrast="true"] .game-node {
+  border-width: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* --- Mobile Responsive --- */
 
 @media (max-width: 768px) {

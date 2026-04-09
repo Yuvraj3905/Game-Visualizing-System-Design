@@ -57,6 +57,8 @@ export default function ComponentTray() {
 
   return (
     <div
+      role="toolbar"
+      aria-label="Infrastructure components"
       data-tour="component-tray"
       style={collapsed ? {
         position: 'fixed',

@@ -206,12 +206,14 @@ export default function App() {
 
   return (
     <div style={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)', overflow: 'hidden' }}>
+      <a href="#canvas" className="skip-link">Skip to canvas</a>
       <HUD />
 
       <div style={{ flex: 1, display: 'flex', position: 'relative' }}>
         <ComponentTray />
 
         <div
+          id="canvas"
           data-tour="canvas"
           ref={reactFlowWrapper}
           style={{ flex: 1, position: 'relative', paddingBottom: isMobile ? 56 : 0 }}

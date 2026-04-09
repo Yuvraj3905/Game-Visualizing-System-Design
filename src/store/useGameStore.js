@@ -28,6 +28,13 @@ function saveProgress(level, unlockedLevel) {
   } catch { /* quota exceeded, ignore */ }
 }
 
+function announce(message) {
+  try {
+    const el = document.getElementById('game-announcer');
+    if (el) { el.textContent = ''; setTimeout(() => { el.textContent = message; }, 50); }
+  } catch {}
+}
+
 const savedProgress = loadProgress();
 
 const useGameStore = create((set, get) => ({
@@ -46,6 +53,7 @@ const useGameStore = create((set, get) => ({
   showLearningPaths: false,
   showWeeklyTournament: false,
   showLevelEditor: false,
+  highContrast: false,
 
   // Daily challenge
   dailyMode: false,
@@ -309,6 +317,7 @@ const useGameStore = create((set, get) => ({
     }
     Sound.stopMusic();
     Sound.playSuccess();
+    announce('Level complete! Your architecture survived.');
   },
 
   onFail: () => {
@@ -323,6 +332,7 @@ const useGameStore = create((set, get) => ({
     });
     Sound.stopMusic();
     Sound.playFail();
+    announce('System failure! Check the post-mortem for details.');
   },
 
   retryLevel: () => {
@@ -374,6 +384,11 @@ const useGameStore = create((set, get) => ({
   toggleWeeklyTournament: () => set(state => ({ showWeeklyTournament: !state.showWeeklyTournament })),
   toggleMetricsDashboard: () => set(state => ({ showMetricsDashboard: !state.showMetricsDashboard })),
   toggleLevelEditor: () => set(state => ({ showLevelEditor: !state.showLevelEditor })),
+  toggleHighContrast: () => {
+    const next = !get().highContrast;
+    document.documentElement.setAttribute('data-high-contrast', String(next));
+    set({ highContrast: next });
+  },
 
   loadCustomLevel: (customData) => {
     const { tickInterval, interviewTimerInterval } = get();
