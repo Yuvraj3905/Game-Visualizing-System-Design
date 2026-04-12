@@ -246,7 +246,7 @@ export const LEVEL_CONFIGS = {
     winLesson: "CDNs and multi-region deployment reduce latency by serving users from nearby locations. This is how Cloudflare, AWS CloudFront, and Akamai make the web fast — by putting copies of your content everywhere.",
     references: [
       { title: 'What is a CDN?', url: 'https://www.cloudflare.com/learning/cdn/what-is-a-cdn/' },
-      { title: 'Multi-Region Architecture', url: 'https://aws.amazon.com/solutions/implementations/multi-region-application-architecture/' },
+      { title: 'Multi-Site Active/Active on AWS', url: 'https://aws.amazon.com/blogs/architecture/disaster-recovery-dr-architecture-on-aws-part-iv-multi-site-active-active/' },
     ],
     nodeCosts: { server: 400, loadBalancer: 400, database: 500, cache: 500, cdn: 600, region: 0 },
     activeSimulators: ['traffic', 'loadBalancer', 'cache', 'geoLatency'],
@@ -439,7 +439,7 @@ export const LEVEL_CONFIGS = {
     winLesson: "Message queues decouple fast web servers from slow background jobs. This is how every e-commerce site handles payments, emails, and notifications — asynchronously, without blocking users.",
     references: [
       { title: 'Message Queue Fundamentals', url: 'https://aws.amazon.com/message-queue/' },
-      { title: 'RabbitMQ vs Kafka', url: 'https://www.confluent.io/learn/rabbitmq-vs-kafka/' },
+      { title: 'RabbitMQ vs Kafka', url: 'https://aws.amazon.com/compare/the-difference-between-rabbitmq-and-kafka/' },
     ],
     nodeCosts: { server: 400, loadBalancer: 400, database: 500, cache: 500, messageQueue: 600, worker: 350 },
     activeSimulators: ['traffic', 'loadBalancer', 'queue'],
@@ -688,7 +688,7 @@ export const LEVEL_CONFIGS = {
     failExplanation: 'Without caching, every timeline read hits the database. With a 100:1 read-write ratio, the DB becomes a massive bottleneck. Twitter solved this by pre-computing timelines into a cache (fanout on write).',
     winLesson: "Twitter serves 500M+ tweets per day using a fan-out-on-write model — when someone tweets, it's pushed into followers' pre-computed timeline caches. Reads never touch the database. This is why your feed loads instantly.",
     references: [
-      { title: 'How Twitter Stores 500M Tweets/Day', url: 'https://blog.twitter.com/engineering/en_us/a/2013/new-tweets-per-second-record-and-how' },
+      { title: 'Twitter Architecture: 150M Users & 300K QPS', url: 'https://highscalability.com/the-architecture-twitter-uses-to-deal-with-150m-active-users/' },
       { title: 'Fan-Out Pattern Explained', url: 'https://www.youtube.com/watch?v=QmX2NPkJTKg' },
     ],
     nodeCosts: { server: 400, loadBalancer: 400, database: 500, cache: 500, cdn: 600, messageQueue: 600, worker: 350 },
@@ -750,7 +750,7 @@ export const LEVEL_CONFIGS = {
     winLesson: "Uber processes millions of location updates per second by separating concerns: a high-throughput location service ingests GPS pings, while independent match workers consume from a queue. This separation lets each service scale independently.",
     references: [
       { title: "Uber's Real-Time Matching Architecture", url: 'https://www.uber.com/en-IN/blog/fulfillment-platform-rearchitecture/' },
-      { title: 'Geospatial Indexing at Scale', url: 'https://www.youtube.com/watch?v=AzMPRYcRpjI' },
+      { title: 'Uber H3: Hexagonal Geospatial Indexing', url: 'https://www.youtube.com/watch?v=UILoSqvIM2w' },
     ],
     nodeCosts: { server: 400, loadBalancer: 400, database: 500, cache: 500, messageQueue: 600, worker: 350, apiGateway: 800 },
     activeSimulators: ['traffic', 'rateLimiter', 'loadBalancer', 'queue'],
@@ -935,7 +935,7 @@ export const LEVEL_CONFIGS = {
     winLesson: "Stripe processes billions in payments using idempotency keys (preventing double charges), async job queues (decoupling API from bank calls), and multi-region database replication. No single failure can lose a transaction.",
     references: [
       { title: 'Stripe Idempotency Keys', url: 'https://stripe.com/docs/api/idempotent_requests' },
-      { title: "Stripe's Payment Architecture", url: 'https://www.youtube.com/watch?v=MJABqwzBkHs' },
+      { title: "How Stripe Achieves Five 9s of Availability", url: 'https://www.youtube.com/watch?v=7vn49exuYxo' },
     ],
     nodeCosts: { server: 400, loadBalancer: 400, database: 500, cache: 500, messageQueue: 600, worker: 350, replica: 700, healthCheck: 300, circuitBreaker: 800 },
     activeSimulators: ['traffic', 'loadBalancer', 'queue', 'failover'],
